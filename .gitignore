@@ -1,0 +1,31 @@
+# Python byte-compiled / optimised / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.eggs/
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv cache and lock
+.uv/
+
+# Test & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE-specific directories
+.idea/
+.vscode/
+
+# Environment files
+.env
+.env.*

@@ -1,0 +1,28 @@
+[project]
+name        = "augmented-engineer-python-starter"
+version     = "0.1.0"
+description = "Build a backend for managing the Bel'Air Festival drinks and snacks bar using Python and AI."
+requires-python = ">=3.13"
+
+# ─── Dependency groups ────────────────────────────────────────────────────────
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.9",
+]
+
+# ─── Test configuration ──────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = [
+    "domain/tests",
+    "application/tests",
+    "infrastructure/tests",
+]
+
+# ─── Linting / formatting (Ruff) ─────────────────────────────────────────────
+[tool.ruff]
+line-length    = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
