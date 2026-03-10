@@ -5,7 +5,7 @@ Version española : [README_es.md](README_es.md)
 
 >[!note]
 > 
-> Ce projet fait partie du parcours d'apprentissage eXalt IT augmented engineer, disponible dans son [academy](https://example.com).
+> Ce projet fait partie du parcours d'apprentissage eXalt IT augmented engineer, disponible dans son [academy](https://academy.exalt-company.com/paths/699c49f3a1dffef24c46c739/home).
 
 Bonjour et bienvenue dans le dépôt du projet La Buvette de Bel'Air !
 
@@ -100,7 +100,7 @@ uv run python -m application.main
 
 ## Étapes suivantes
 
-Commencez par suivre le reste du matériel de formation dans l'[academy](https://example.com).
+Commencez par suivre le reste du matériel de formation dans l'[academy](https://academy.exalt-company.com/paths/699c49f3a1dffef24c46c739/home).
 
 Consultez le fichier [FEATURES_fr.md](./FEATURES_fr.md) pour la liste des user stories et des critères d'acceptation.
 
