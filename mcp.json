@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "serena",
+        "--context", "ide-assistant",
+        "--project", "${workspaceFolder}"
+      ]
+    }
+  }
+}
