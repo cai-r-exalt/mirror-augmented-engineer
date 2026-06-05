@@ -94,6 +94,7 @@ The project follows a Hexagonal Architecture (Ports and Adapters) with FastAPI:
 ## Development guidelines
 
 - Integrate the Python coding guidelines defined [here](./docs/agents/instructions/coding/python-coding-guidelines.md) when working on Python code
+- Follow the [Git Guidelines](./docs/agents/instructions/git-guidelines.md) for repository git workflow, commit conventions, and agent rules
 - Integrate the testing guidelines defined for each layer when working on tests:
   - **Application Layer**: [Application Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md)
   - **Domain Layer**: [Domain Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md)
