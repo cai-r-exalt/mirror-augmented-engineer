@@ -48,16 +48,16 @@ The project follows a Hexagonal Architecture (Ports and Adapters) with FastAPI:
 - **Application Layer** (`app/application/`): FastAPI routers, Pydantic schemas (request/response DTOs), and dependency injection.
   - Delegates to Domain Use Cases via injected port interfaces.
   - Handles input validation, request mapping, and OpenAPI documentation.
-  - Follow the testing approach with Integration Tests at the API level. See [Application Testing Philosophy](./docs/agents/instructions/testing/application-testing.instructions.md).
+  - Follow the testing approach with Integration Tests at the API level. See [Application Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md).
 
 - **Domain Layer** (`app/domain/`): The hexagon core — Domain Entities, Value Objects, Port abstract classes, and Use Case implementations.
   - No dependencies on FastAPI or SQLAlchemy.
   - Defines abstract classes for all secondary ports.
-  - Follows a behaviour-focused testing approach. See [Domain Testing Philosophy](./docs/agents/instructions/testing/domain-testing.instructions.md).
+  - Follows a behaviour-focused testing approach. See [Domain Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md).
 
 - **Infrastructure Layer** (`app/infrastructure/`): Technical implementations of Domain Ports.
   - Implements persistence (SQLAlchemy + Alembic), external service clients, and message adapters.
-  - Follow the testing approach with Integration Tests using pytest + Testcontainers. See [Infrastructure Testing Philosophy](./docs/agents/instructions/testing/infrastructure-testing.instructions.md).
+  - Follow the testing approach with Integration Tests using pytest + Testcontainers. See [Infrastructure Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md).
 
 ## Repository Structure
 
@@ -94,21 +94,11 @@ The project follows a Hexagonal Architecture (Ports and Adapters) with FastAPI:
 ## Development guidelines
 
 - Integrate the Python coding guidelines defined [here](./docs/agents/instructions/coding/python-coding-guidelines.md) when working on Python code
-- Integrate the git usage directives defined [here](./docs/agents/instructions/coding/git-guidelines.md) when working with git
 - Integrate the testing guidelines defined for each layer when working on tests:
-  - **Application Layer**: [Application Testing Philosophy](./docs/agents/instructions/testing/application-testing.instructions.md)
-  - **Domain Layer**: [Domain Testing Philosophy](./docs/agents/instructions/testing/domain-testing.instructions.md)
-  - **Infrastructure Layer**: [Infrastructure Testing Philosophy](./docs/agents/instructions/testing/infrastructure-testing.instructions.md)
-- Integrate the development workflow instructions [here](./docs/agents/instructions/development-workflow.instructions.md) when implementing code.
-
-## Code Review guidelines
-
-When reviewing code, follow the [Code Review Guidelines](./docs/agents/instructions/coding/code-review-guidelines.md) strictly.
+  - **Application Layer**: [Application Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md)
+  - **Domain Layer**: [Domain Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md)
+  - **Infrastructure Layer**: [Infrastructure Testing Philosophy](./docs/agents/instructions/testing/testing-guidelines.md)
 
 ## Documentation guidelines
 
 When documenting code or practices, follow the [Documentation Guidelines](./docs/agents/instructions/coding/documentation-guidelines.md) strictly.
-
-## AGENTS.md Maintenance guidelines
-
-When working on improving the AGENTS.md instructions, follow the [AGENTS.md Maintenance Guidelines](./docs/agents/instructions/coding/agents-md-maintenance-guidelines.md) strictly.
