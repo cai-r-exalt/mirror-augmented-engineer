@@ -15,167 +15,68 @@ The input is the JSON output of the Green step. This JSON contains the file path
 
 ## Important points
 
-1. Move the test class and any related test code to the appropriate test file if it was not already in the correct location. For example, if the test is for a domain use case, it should be in `tests/domain/`, if it's for an application use case, it should be in `tests/application/`, and so on.
+1. Move the test class and any related test code to the appropriate production code file. The class should be renamed adequately. For example, if the test is for a domain use case, it should be in `app/domain/`, if it's for an application use case, it should be in `app/application/`, and so on.
 2. Refactor the test code to improve readability, maintainability, and adherence to best practices while ensuring that the test still passes. Such as no code duplication, clear variable and functions naming.
 3. Code should conform to coding style and project guidelines.
 4. Do not change the behavior of the test or the assertions, only refactor the structure and organization of the code.
 5. After refactoring, run the test to confirm it still passes: `uv run pytest tests/<test-file-path> -v`.
 6. All tests should stay green after the refactor, no new failing tests should be introduced.
 7. Work incrementally, making small refactorings and testing frequently to ensure the test remains passing throughout the process.
+8. Do not add test fixtures or any code that usually exists in testing files. The refactor goal is to write production code.
+9. Do not add any comments about test or TDD in the code, only refactor the test code into production code with clear naming and structure. Do not touch any comments that were already present in the test files.
+10. Clean the test files by removing dead code or dead imports.
 
 ## Examples
 
-Example 1 — simple fixture extraction
 
-Input (JSON from Green step):
+Example 1 — Move domain use-case test into production use case
 
-```json
-{ "modified_test_files": ["tests/application/test_place_order.py"] }
-```
-
-Before (extracted from `tests/application/test_place_order.py` after Green step):
-
-```python
-class TestPlaceOrder:
-	def setup_method(self):
-		self.user_id = 1
-		self.product_id = 42
-
-	def test_place_order_creates_record(self):
-		repo = InMemoryOrderRepository()
-		service = PlaceOrderService(repo)
-		order = Order(user_id=self.user_id, product_id=self.product_id, quantity=1)
-		service.place(order)
-		assert repo.count() == 1
-
-	def test_place_order_reduces_stock(self):
-		repo = InMemoryOrderRepository()
-		inventory = InMemoryInventory()
-		service = PlaceOrderService(repo, inventory)
-		order = Order(user_id=self.user_id, product_id=self.product_id, quantity=1)
-		service.place(order)
-		assert inventory.get_stock(self.product_id) == 9
-```
-
-Problems in this version:
-- Duplication of repo/service creation across tests
-- Setup uses instance attributes instead of fixtures
-
-After refactor (moved to `tests/application/test_place_order.py` with fixtures):
-
-```python
-import pytest
-
-@pytest.fixture
-def user_id():
-	return 1
-
-@pytest.fixture
-def product_id():
-	return 42
-
-@pytest.fixture
-def repo():
-	return InMemoryOrderRepository()
-
-@pytest.fixture
-def inventory():
-	inv = InMemoryInventory()
-	inv.set_stock(42, 10)
-	return inv
-
-@pytest.fixture
-def service(repo, inventory):
-	return PlaceOrderService(repo, inventory)
-
-def build_order(user_id, product_id, quantity=1):
-	return Order(user_id=user_id, product_id=product_id, quantity=quantity)
-
-def test_place_order_creates_record(service, repo, user_id, product_id):
-	order = build_order(user_id, product_id)
-	service.place(order)
-	assert repo.count() == 1
-
-def test_place_order_reduces_stock(service, inventory, user_id, product_id):
-	order = build_order(user_id, product_id)
-	service.place(order)
-	assert inventory.get_stock(product_id) == 9
-```
-
-Refactor notes:
-- Extracted `repo`, `inventory`, and `service` into `pytest` fixtures for reuse.
-- Replaced `setup_method` attributes with explicit `pytest` fixtures (`user_id`, `product_id`).
-- Added `build_order` helper to make test intent clearer and avoid inline construction duplication.
-- Kept assertions and behavior unchanged — only improved structure and readability.
-
-Verification:
-- Run the test after refactor: `uv run pytest tests/application/test_place_order.py -v`
-- Ensure all tests remain green; no behavior was changed.
-
-Example 2 — moving tests to correct module and parametrize
-
-Input (JSON from Green step):
+- Input (Green-step JSON):
 
 ```json
-{ "modified_test_files": ["tests/test_place_order.py"] }
+{
+  "modified_files": ["tests/test_domain.py"]
+}
 ```
 
-Before (`tests/test_place_order.py`):
+- Expected output (what the refactor step should do):
 
-```python
-def test_place_order_happy_path():
-	repo = InMemoryOrderRepository()
-	service = PlaceOrderService(repo)
-	order = Order(user_id=1, product_id=10, quantity=2)
-	service.place(order)
-	assert repo.count() == 1
+- Move the minimal passing code from the test into `app/domain/use_cases/place_order.py` as a properly named class `PlaceOrder` or function `place_order()` while keeping behavior identical.
+- Rename the test helper class to a clearer test name (e.g., `TestPlaceOrderSuccess`) and update imports to reference the production `PlaceOrder` class.
+- Remove duplicated setup code by extracting a small private helper in the production module if the test previously contained logic that belongs to domain behaviour.
+- Keep assertions and external behaviour unchanged.
 
-def test_place_order_insufficient_stock():
-	repo = InMemoryOrderRepository()
-	service = PlaceOrderService(repo)
-	order = Order(user_id=1, product_id=10, quantity=99)
-	with pytest.raises(OutOfStockError):
-		service.place(order)
+
+Example 2 — Extract and remove duplication from an application-layer test
+
+- Input (Green-step JSON):
+
+```json
+{
+  "modified_files": ["tests/test_application.py"]
+}
 ```
 
-Refactor goals:
-- This is an application-level test and should live under `tests/application/`.
-- Reduce duplication and use `pytest.mark.parametrize` to cover multiple scenarios.
+- Expected output (what the refactor step should do):
 
-After refactor (moved to `tests/application/test_place_order.py`):
+- Identify duplicated mock setup and move the core orchestration code into `app/application/use_cases/validate_order.py` as `validate_order()`.
+- Replace duplicated inline mocks in the test with focused, single-line mocks and use clear variable names for the arrangement phase.
+- Ensure the test imports the new `validate_order` and still asserts the same interactions with the stock service.
+- Run the specific test to confirm it remains green.
 
-```python
-import pytest
+Notes:
+- Examples show the kind of structural changes expected: move production code out of tests, rename artifacts for clarity, and remove duplication while preserving test assertions.
+- Do small, verifiable refactors and run the test frequently.
 
-@pytest.fixture
-def repo():
-	return InMemoryOrderRepository()
+## Output requirements
 
-@pytest.fixture
-def service(repo):
-	return PlaceOrderService(repo)
+The output of this prompt should be in JSON format so that downstream steps can parse it. The JSON MUST contain the following field:
+- `modified_files`: a list of file paths that were modified in this refactor step. Include any production or test files changed (for example, `app/domain/use_cases/place_order.py` or `tests/test_domain.py`).
 
-@pytest.mark.parametrize(
-	"quantity,expect_error",
-	[
-		(2, None),
-		(99, OutOfStockError),
-	],
-)
-def test_place_order_various_quantities(service, repo, quantity, expect_error):
-	order = Order(user_id=1, product_id=10, quantity=quantity)
-	if expect_error:
-		with pytest.raises(expect_error):
-			service.place(order)
-	else:
-		service.place(order)
-		assert repo.count() == 1
+Example output:
+
+```json
+{
+	"modified_files": ["app/domain/use_cases/place_order.py", "tests/test_domain.py"]
+}
 ```
-
-Refactor notes:
-- Moved tests to `tests/application/` to match the application scope.
-- Combined related scenarios using `parametrize` to make intent explicit and avoid duplicated setup.
-- Preserved assertions and exception expectations.
-
-Verification:
-- Run `uv run pytest tests/application/test_place_order.py -v` and confirm green.

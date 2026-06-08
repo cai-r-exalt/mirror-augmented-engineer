@@ -1,36 +1,18 @@
 import pytest
-from dataclasses import dataclass
-from typing import List, Dict, Any
 
 """Application-layer test: Passer une commande (simple, article en stock).
 
 Scenario:
-  Given un festivalier identifié
-  And un article "Mojito" disponible en stock
-  When le festivalier passe une commande pour 1 "Mojito"
-  Then la commande est créée avec le statut "EN_ATTENTE"
-  And le festivalier reçoit un identifiant de commande
+    Given un festivalier identifié
+    And un article "Mojito" disponible en stock
+    When le festivalier passe une commande pour 1 "Mojito"
+    Then la commande est créée avec le statut "EN_ATTENTE"
+    And le festivalier reçoit un identifiant de commande
 
 This test is expected to fail until the application use case is implemented.
 """
 
-
-@dataclass
-class PlaceOrderCommand:
-    festivalier_id: str
-    items: List[Dict[str, Any]]
-
-
-class PlaceOrderUseCase:
-    def __init__(self, order_repository, inventory_repository):
-        self.order_repository = order_repository
-        self.inventory_repository = inventory_repository
-
-    def execute(self, command: PlaceOrderCommand):
-        for item in command.items:
-            if not self.inventory_repository.is_in_stock(item["name"], item["quantity"]):
-                raise ValueError("Item out of stock")
-        return self.order_repository.create_order(command.festivalier_id, command.items)
+from application.use_cases.place_order import PlaceOrder, PlaceOrderCommand
 
 
 class TestPlaceOrder:
@@ -53,8 +35,8 @@ class TestPlaceOrder:
         self.fake_inventory = FakeInventoryRepository()
         self.fake_order_repo = FakeOrderRepository()
 
-        # Use test-local use-case and command classes (no production imports)
-        self.use_case = PlaceOrderUseCase(
+        # Use production use-case and command classes
+        self.use_case = PlaceOrder(
             order_repository=self.fake_order_repo,
             inventory_repository=self.fake_inventory,
         )
