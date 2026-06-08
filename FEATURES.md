@@ -34,6 +34,17 @@ Rules:
 Rules:
 - A festival goer can order multiple items in a single order
 - The total cost of the order must not exceed the festival goer's token balance on either drink or food tokens
+- The order is rejected if any requested item is out of stock
+
+### As a bartender, I want to manage the inventory of drinks and food items
+
+Rules:
+- Each drink item has a stock quantity that can be tracked and updated
+- Each food item (snack or meal) has a stock quantity that can be tracked and updated
+- The stock quantity cannot be negative
+- When an order is placed, the stock for all requested items must be checked
+- If any item in the order is out of stock, the entire order is rejected and no tokens are deducted
+- Stock is decremented only when an order is successfully placed and acknowledged
 
 ### As a group of festival goers, we want to be able to pool our tokens to place a group order
 
