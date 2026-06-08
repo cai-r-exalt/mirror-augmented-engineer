@@ -1,0 +1,8 @@
+TDD Red prompt error list
+
+- pytest was not installed
+- python used was not the system python
+- test was not runnable
+- it failed on import instead of assert
+- production code was generated
+
