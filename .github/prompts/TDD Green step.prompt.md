@@ -96,3 +96,16 @@ Notes:
 ```bash
 uv run pytest application/tests/test_place_order.py::TestPlaceOrder::test_commande_simple_mojito_en_stock_cree_commande_en_attente_avec_id -q
 ```
+
+## Output requirements
+
+The output of this prompt should be in JSON format so that the refactor prompt can easily parse it. The JSON should contain the following fields:
+- `modified_test_files`: a list of file paths that were modified in this step. These should reference the test files changed (for example files under `tests/` or `application/tests/`) — do not list production files (for example, `application/main.py`).
+
+Example output:
+
+```json
+{
+  "modified_test_files": ["application/tests/test_place_order.py"]
+}
+```
