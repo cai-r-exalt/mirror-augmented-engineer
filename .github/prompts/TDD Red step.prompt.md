@@ -19,6 +19,8 @@ model: GPT-5 mini (copilot)
     - for the application layer: `docs/agents/instructions/application-testing.instructions.md`
     - for the infrastructure layer: `docs/agents/instructions/infrastructure-testing.instructions.md`
 4. Run the test to confirm it fails: `uv run pytest tests/<test-file-path> -v`.
+5. Test should expose the given/when/then behavior clearly in the test code structure and assertions.
+6. There is no need to test the existence of a class or function, the test should focus on the expected behavior and outcomes of the scenario.
 
 ## Requirements
 - **CRITICAL**: **NEVER** implement any production code. Your ONLY goal is to write a failing test.
