@@ -12,15 +12,13 @@ Scenario:
 This test is expected to fail until the application use case is implemented.
 """
 
-from application.use_cases.place_order import PlaceOrder, PlaceOrderCommand
+from domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
 
 
 class TestPlaceOrder:
     def setup_method(self):
-        # Simple fakes to fulfil the use-case constructor shape in the future.
-        class FakeInventoryRepository:
-            def is_in_stock(self, item_name: str, quantity: int) -> bool:
-                return True
+        # Layer-local fake inventory repository
+        from application.tests.fakes.fake_inventory import FakeInventoryRepository
 
         class FakeOrderRepository:
             def create_order(self, festivalier_id: str, items: list):
@@ -36,14 +34,14 @@ class TestPlaceOrder:
         self.fake_order_repo = FakeOrderRepository()
 
         # Use production use-case and command classes
-        self.use_case = PlaceOrder(
+        self.use_case = PasserCommandeUseCase(
             order_repository=self.fake_order_repo,
-            inventory_repository=self.fake_inventory,
+            stock_repository=self.fake_inventory,
         )
 
     def test_commande_simple_mojito_en_stock_cree_commande_en_attente_avec_id(self):
         # Given
-        cmd = PlaceOrderCommand(festivalier_id="festivalier-1", items=[{"name": "Mojito", "quantity": 1}])
+        cmd = PasserCommandeCommand(festivalier_id="festivalier-1", items=[{"name": "Mojito", "quantity": 1}])
 
         # When
         result = self.use_case.execute(cmd)
