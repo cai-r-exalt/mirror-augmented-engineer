@@ -1,4 +1,4 @@
-class TestCreateOrderInfrastructureEndToEnd:
+class TestCreateOrderApplicationEndToEnd:
     def setup_method(self):
         # Given: un festivalier
         self.festivalier_id = "festivalier-42"
@@ -25,8 +25,8 @@ class TestCreateOrderInfrastructureEndToEnd:
                 return self._store.get(cid)
 
         # Wire controller to the mock use-case
-        from infrastructure.controllers.commande_controller import CommandesController
-        from infrastructure.dto.commande import CreerCommandeRequest
+        from application.controllers.commande_controller import CommandesController
+        from application.dto.commande import CreerCommandeRequest
 
         self.client = CommandesController(use_case=MockUseCase())
         self.CreerCommandeRequest = CreerCommandeRequest

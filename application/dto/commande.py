@@ -14,3 +14,4 @@ class CreerCommandeResponse:
 
     def json(self) -> Dict[str, Any]:
         return self._body
+

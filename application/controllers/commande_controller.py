@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from infrastructure.dto.commande import CreerCommandeRequest, CreerCommandeResponse
+from application.dto.commande import CreerCommandeRequest, CreerCommandeResponse
 
 
 class CommandesController:
@@ -61,3 +61,4 @@ class CommandesController:
                 return CreerCommandeResponse(404, {})
             return CreerCommandeResponse(200, order)
         return CreerCommandeResponse(404, {})
+

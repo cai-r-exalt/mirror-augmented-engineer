@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional
 
-from infrastructure.controllers.commande_controller import CommandesController
-from infrastructure.dto.commande import CreerCommandeRequest, CreerCommandeResponse
+from application.controllers.commande_controller import CommandesController
+from application.dto.commande import CreerCommandeRequest, CreerCommandeResponse
 
 
 class InfrastructureOrderAPI:
