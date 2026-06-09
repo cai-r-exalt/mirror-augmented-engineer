@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from application.dto.commande import CreerCommandeRequest, CreerCommandeResponse
+from app.application.dto.commande import CreerCommandeRequest, CreerCommandeResponse
 
 
 class CommandesController:
@@ -36,7 +36,7 @@ class CommandesController:
                 is_domain_use_case = False
 
             if is_domain_use_case:
-                from domain.use_cases.place_order import PasserCommandeCommand
+                from app.domain.use_cases.place_order import PasserCommandeCommand
 
                 items = []
                 for a in req.articles:
@@ -61,4 +61,3 @@ class CommandesController:
                 return CreerCommandeResponse(404, {})
             return CreerCommandeResponse(200, order)
         return CreerCommandeResponse(404, {})
-

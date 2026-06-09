@@ -12,13 +12,13 @@ Scenario:
 This test is expected to fail until the application use case is implemented.
 """
 
-from domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
+from app.domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
 
 
 class TestPlaceOrder:
     def setup_method(self):
         # Layer-local fake inventory repository
-        from application.tests.fakes.fake_inventory import FakeInventoryRepository
+        from tests.application.fakes.fake_inventory import FakeInventoryRepository
 
         class FakeOrderRepository:
             def create_order(self, festivalier_id: str, items: list):

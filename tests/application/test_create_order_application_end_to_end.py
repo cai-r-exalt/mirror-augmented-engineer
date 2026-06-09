@@ -25,8 +25,8 @@ class TestCreateOrderApplicationEndToEnd:
                 return self._store.get(cid)
 
         # Wire controller to the mock use-case
-        from application.controllers.commande_controller import CommandesController
-        from application.dto.commande import CreerCommandeRequest
+        from app.application.controllers.commande_controller import CommandesController
+        from app.application.dto.commande import CreerCommandeRequest
 
         self.client = CommandesController(use_case=MockUseCase())
         self.CreerCommandeRequest = CreerCommandeRequest

@@ -14,9 +14,9 @@ dev = [
 # ─── Test configuration ──────────────────────────────────────────────────────
 [tool.pytest.ini_options]
 testpaths = [
-    "domain/tests",
-    "application/tests",
-    "infrastructure/tests",
+    "tests/domain",
+    "tests/application",
+    "tests/infrastructure",
 ]
 
 # ─── Linting / formatting (Ruff) ─────────────────────────────────────────────

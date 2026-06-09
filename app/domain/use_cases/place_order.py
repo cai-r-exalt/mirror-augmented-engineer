@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Dict, Any
 
-from domain.ports.stock_repository import StockRepository
-from domain.exceptions import StockInsuffisantException, ArticleInconnuException
+from app.domain.ports.stock_repository import StockRepository
+from app.domain.exceptions import StockInsuffisantException, ArticleInconnuException
 
 
 @dataclass

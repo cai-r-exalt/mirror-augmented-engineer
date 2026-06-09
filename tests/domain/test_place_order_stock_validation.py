@@ -1,13 +1,13 @@
 import pytest
 
-from domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
-from domain.exceptions import StockInsuffisantException, ArticleInconnuException
+from app.domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
+from app.domain.exceptions import StockInsuffisantException, ArticleInconnuException
 
 
 class TestPlaceOrderStockValidation:
     def setup_method(self):
         # Use layer-local fake inventory repository
-        from domain.tests.fakes.fake_inventory import FakeInventoryRepository
+        from tests.domain.fakes.fake_inventory import FakeInventoryRepository
 
         class FakeOrderRepository:
             def create_order(self, festivalier_id: str, items: list):
