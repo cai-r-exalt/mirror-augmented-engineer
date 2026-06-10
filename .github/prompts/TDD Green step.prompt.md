@@ -19,6 +19,7 @@ Input is a test scenario description that was previously implemented as a failin
 4. Implement the code in the test class, do not write production code.
 5. Do not modify the test code that was written in the Red step, only add the necessary implementation to make it pass.
 6. Do not modify any other tests or production code outside of what is necessary for this specific test scenario.
+7. if the JSON file has empty fields, it means the test was already implemented. Return a JSON with empty fields and do not implement the test again.
 
 ## Examples
 
@@ -100,12 +101,12 @@ uv run pytest application/tests/test_place_order.py::TestPlaceOrder::test_comman
 ## Output requirements
 
 The output of this prompt should be in JSON format so that the refactor prompt can easily parse it. The JSON should contain the following fields:
-- `modified_test_files`: a list of file paths that were modified in this step. These should reference the test files changed (for example files under `tests/` or `application/tests/`) — do not list production files (for example, `application/main.py`).
+- `modified_files`: a list of file paths that were modified in this step. These should reference the test files changed (for example files under `tests/` or `application/tests/`) — do not list production files (for example, `application/main.py`).
 
 Example output:
 
 ```json
 {
-  "modified_test_files": ["application/tests/test_place_order.py"]
+  "modified_files": ["application/tests/test_place_order.py"]
 }
 ```

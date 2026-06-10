@@ -25,6 +25,7 @@ The input is the JSON output of the Green step. This JSON contains the file path
 8. Do not add test fixtures or any code that usually exists in testing files. The refactor goal is to write production code.
 9. Do not add any comments about test or TDD in the code, only refactor the test code into production code with clear naming and structure. Do not touch any comments that were already present in the test files.
 10. Clean the test files by removing dead code or dead imports.
+11. If the JSON file has empty fields, it means there is no new test scenario to refactor. In this case, return a JSON with empty fields and do not perform any refactoring.
 
 ## Examples
 

@@ -24,6 +24,7 @@ Input is a test scenario description that was previously implemented as a failin
 4. Implement the code in the test class, do not write production code.
 5. Do not modify the test code that was written in the Red step, only add the necessary implementation to make it pass.
 6. Do not modify any other tests or production code outside of what is necessary for this specific test scenario.
+7. if the JSON file has empty fields, it means the test was already implemented. Return a JSON with empty fields and do not implement the test again.
 
 ## Examples
 
