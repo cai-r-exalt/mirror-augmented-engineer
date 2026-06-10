@@ -7,12 +7,12 @@ from app.domain.use_cases.place_order import PasserCommandeUseCase
 
 class TestPlaceOrderApplicationController:
     def setup_method(self):
-        # Use layer-local fake inventory repository
-        from tests.application.fakes.fake_inventory import FakeInventoryRepository
-
+        # Use production in-memory stock repository for application tests
+        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
         from app.infrastructure.adapters.in_memory_order_repository import InMemoryOrderRepository
 
-        self.fake_inventory = FakeInventoryRepository()
+        # Provide some initial stock for the scenario
+        self.fake_inventory = InMemoryStockRepository({"Mojito": 10})
         self.fake_order_repo = InMemoryOrderRepository()
 
         # Wire the real domain use-case into the controller

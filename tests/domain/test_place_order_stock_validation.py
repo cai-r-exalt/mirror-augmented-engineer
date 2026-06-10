@@ -6,8 +6,8 @@ from app.domain.exceptions import StockInsuffisantException, ArticleInconnuExcep
 
 class TestPlaceOrderStockValidation:
     def setup_method(self):
-        # Use layer-local fake inventory repository
-        from tests.domain.fakes.fake_inventory import FakeInventoryRepository
+        # Use production in-memory stock repository for domain tests
+        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
 
         class FakeOrderRepository:
             def create_order(self, festivalier_id: str, items: list):
@@ -18,7 +18,7 @@ class TestPlaceOrderStockValidation:
 
                 return Order(order_id="order-42", status="EN_ATTENTE")
 
-        self.FakeInventoryRepository = FakeInventoryRepository
+        self.FakeInventoryRepository = InMemoryStockRepository
         self.fake_order_repo = FakeOrderRepository()
 
     def test_commande_created_and_stock_decremented_when_stock_sufficient(self):

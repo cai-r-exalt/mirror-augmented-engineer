@@ -21,6 +21,7 @@ model: GPT-5 mini (copilot)
 4. Run the test to confirm it fails: `uv run pytest tests/<test-file-path> -v`.
 5. Test should expose the given/when/then behavior clearly in the test code structure and assertions.
 6. There is no need to test the existence of a class or function, the test should focus on the expected behavior and outcomes of the scenario.
+7. If the test for the scenario already exists, do not create another test. Simply confirm with the user and output a json with empty fields.
 
 ## Requirements
 - **CRITICAL**: **NEVER** implement any production code. Your ONLY goal is to write a failing test.
