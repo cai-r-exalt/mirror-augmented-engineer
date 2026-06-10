@@ -5,4 +5,4 @@ TDD Red prompt error list
 - test was not runnable
 - it failed on import instead of assert
 - production code was generated
-
+- there is no link between ports and adapters

@@ -3,32 +3,12 @@ class TestCreateOrderApplicationEndToEnd:
         # Given: un festivalier
         self.festivalier_id = "festivalier-42"
 
-        # Small test-local mock use-case to back the controller
-        class MockUseCase:
-            def __init__(self):
-                self._store = {}
-                self._next = 1
-
-            def execute(self, payload):
-                cid = f"order-{self._next}"
-                self._next += 1
-                order = {
-                    "id": cid,
-                    "festivalierId": payload.get("festivalierId"),
-                    "articles": payload.get("articles", []),
-                    "status": "EN_ATTENTE",
-                }
-                self._store[cid] = order
-                return order
-
-            def get_commande(self, cid):
-                return self._store.get(cid)
-
-        # Wire controller to the mock use-case
+        # Wire controller to a small application-level use-case
+        from app.application.use_cases.simple_order_use_case import SimpleOrderUseCase
         from app.application.controllers.commande_controller import CommandesController
         from app.application.dto.commande import CreerCommandeRequest
 
-        self.client = CommandesController(use_case=MockUseCase())
+        self.client = CommandesController(use_case=SimpleOrderUseCase())
         self.CreerCommandeRequest = CreerCommandeRequest
 
     def test_given_inventory_when_post_commandes_then_returns_201_and_order_pending(self):

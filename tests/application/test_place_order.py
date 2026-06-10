@@ -20,18 +20,10 @@ class TestPlaceOrder:
         # Layer-local fake inventory repository
         from tests.application.fakes.fake_inventory import FakeInventoryRepository
 
-        class FakeOrderRepository:
-            def create_order(self, festivalier_id: str, items: list):
-                class Order:
-                    def __init__(self, order_id, status):
-                        self.id = order_id
-                        self.status = status
-
-                # Minimal test-local behaviour to satisfy the Green step expectations
-                return Order(order_id="order-1", status="EN_ATTENTE")
+        from app.infrastructure.adapters.in_memory_order_repository import InMemoryOrderRepository
 
         self.fake_inventory = FakeInventoryRepository()
-        self.fake_order_repo = FakeOrderRepository()
+        self.fake_order_repo = InMemoryOrderRepository()
 
         # Use production use-case and command classes
         self.use_case = PasserCommandeUseCase(

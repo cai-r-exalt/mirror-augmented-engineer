@@ -31,7 +31,10 @@ class CommandesController:
             # `PasserCommandeUseCase`. Otherwise, preserve the older dict-shaped
             # payload for test-local mock use-cases.
             try:
-                is_domain_use_case = getattr(self.use_case.__class__, "__module__", "").startswith("domain")
+                module_path = getattr(self.use_case.__class__, "__module__", "")
+                # The domain use-case may live under app.domain or domain; detect
+                # presence of 'domain' in the module path rather than strict prefix.
+                is_domain_use_case = "domain" in module_path
             except Exception:
                 is_domain_use_case = False
 
@@ -49,7 +52,19 @@ class CommandesController:
             else:
                 result = self.use_case.execute(payload)
 
-            return CreerCommandeResponse(201, {"commandeId": result.get("id")})
+            # Normalize access to the created order id depending on the
+            # use-case return type (domain entity vs dict-like).
+            commande_id = None
+            try:
+                # Domain entities typically expose attributes
+                commande_id = getattr(result, "id", None)
+            except Exception:
+                commande_id = None
+
+            if not commande_id and isinstance(result, dict):
+                commande_id = result.get("id")
+
+            return CreerCommandeResponse(201, {"commandeId": commande_id})
 
         # Minimal default response when no use-case is wired
         return CreerCommandeResponse(201, {"commandeId": "order-todo"})
