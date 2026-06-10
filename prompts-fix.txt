@@ -7,3 +7,8 @@ TDD Red prompt error list
 - production code was generated
 - there is no link between ports and adapters
 - whenever in Red step, if the test already exists, ask agent to not generate test for another scenario
+- run_subagent is not called
+
+backlog amélioration:
+
+- sometimes agents wants to commit changes without being asked to

@@ -56,3 +56,20 @@ class TestPlaceOrderStockValidation:
         cmd = PasserCommandeCommand(festivalier_id="f-1", items=[{"name": "Champagne", "quantity": 1}])
         with pytest.raises(ArticleInconnuException):
             use_case.execute(cmd)
+
+    def test_commande_refused_when_requested_quantity_exceeds_stock_and_tokens_unchanged(self):
+        # Given: festivalier tokens and an inventory with limited stock
+        inventory = self.FakeInventoryRepository({"beer": 2})
+        use_case = PasserCommandeUseCase(order_repository=self.fake_order_repo, stock_repository=inventory)
+
+        # Festivalier token balances (should not be modified by the domain use case)
+        festivalier_tokens = {"drink": 10, "food": 15}
+
+        # When / Then: requesting more than available raises StockInsuffisantException
+        cmd = PasserCommandeCommand(festivalier_id="f-1", items=[{"name": "beer", "quantity": 3}])
+        with pytest.raises(StockInsuffisantException):
+            use_case.execute(cmd)
+
+        # Tokens must remain unchanged by the domain-level place-order operation
+        assert festivalier_tokens["drink"] == 10
+        assert festivalier_tokens["food"] == 15

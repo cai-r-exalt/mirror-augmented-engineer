@@ -12,7 +12,7 @@ Scenario:
 This test is expected to fail until the application use case is implemented.
 """
 
-from app.domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
+from app.application.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
 
 
 class TestPlaceOrder:

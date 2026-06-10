@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
 from app.application.dto.commande import CreerCommandeRequest, CreerCommandeResponse
+from app.application.use_cases.validate_order import validate_order_request, map_request_to_domain_command
 
 
 class CommandesController:
@@ -19,9 +20,10 @@ class CommandesController:
         if not req.festivalierId:
             return CreerCommandeResponse(401, {})
 
-        # Basic payload validation
-        if not req.articles or not isinstance(req.articles, list):
-            return CreerCommandeResponse(400, {})
+        # Delegate request validation to application use-case
+        errors = validate_order_request(req)
+        if errors:
+            return CreerCommandeResponse(400, {"errors": errors})
 
         payload: Dict[str, Any] = {"festivalierId": req.festivalierId, "articles": req.articles}
 
@@ -39,15 +41,7 @@ class CommandesController:
                 is_domain_use_case = False
 
             if is_domain_use_case:
-                from app.domain.use_cases.place_order import PasserCommandeCommand
-
-                items = []
-                for a in req.articles:
-                    name = a.get("id") or a.get("name")
-                    qty = a.get("quantite") or a.get("quantity")
-                    items.append({"name": name, "quantity": qty})
-
-                command = PasserCommandeCommand(festivalier_id=req.festivalierId, items=items)
+                command = map_request_to_domain_command(req)
                 result = self.use_case.execute(command)
             else:
                 result = self.use_case.execute(payload)
