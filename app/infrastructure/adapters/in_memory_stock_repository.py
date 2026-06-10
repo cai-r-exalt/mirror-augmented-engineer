@@ -1,7 +1,9 @@
 from typing import Dict
 
+from app.domain.ports.stock_repository import StockRepository
 
-class InMemoryStockRepository:
+
+class InMemoryStockRepository(StockRepository):
     def __init__(self, initial_stock: Dict[str, int] | None = None):
         self.stock: Dict[str, int] = dict(initial_stock or {})
 

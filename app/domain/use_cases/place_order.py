@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Dict, Any
 
 from app.domain.ports.stock_repository import StockRepository
+from app.domain.ports.order_repository import OrderRepository
 from app.domain.exceptions import StockInsuffisantException, ArticleInconnuException
 
 
@@ -18,8 +19,8 @@ class PasserCommandeUseCase:
     repository. It depends on a `StockRepository` port.
     """
 
-    def __init__(self, order_repository, stock_repository: StockRepository):
-        self.order_repository = order_repository
+    def __init__(self, order_repository: OrderRepository, stock_repository: StockRepository):
+        self.order_repository: OrderRepository = order_repository
         self.stock_repository = stock_repository
 
     def execute(self, command: PasserCommandeCommand):

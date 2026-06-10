@@ -2,7 +2,7 @@
 # These tests describe the expected persistence behaviour for orders.
 
 from app.domain.entities.commande import Article, LigneCommande, Commande
-from app.infrastructure.adapters.order_repository import SQLAlchemyOrderRepository
+from app.infrastructure.adapters.sqlalchemy_order_repository import SQLAlchemyOrderRepository
 
 
 def test_save_and_retrieve_commande_via_repository():

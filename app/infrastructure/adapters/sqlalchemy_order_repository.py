@@ -6,6 +6,8 @@ previous test-local class (dict-backed store) so tests remain green.
 """
 from typing import Optional, List, Dict, Any
 
+from app.domain.ports.order_repository import OrderRepository
+
 from app.domain.entities.commande import Commande, LigneCommande, Article
 
 
@@ -38,7 +40,7 @@ except Exception:
     Base = None
 
 
-class SQLAlchemyOrderRepository:
+class SQLAlchemyOrderRepository(OrderRepository):
     """Minimal in-memory repository that implements the `OrderRepository` port.
 
     It also provides SQLAlchemy ORM models above for teams that wire a real DB.
