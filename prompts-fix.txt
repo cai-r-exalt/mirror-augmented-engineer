@@ -8,6 +8,7 @@ TDD Red prompt error list
 - there is no link between ports and adapters
 - whenever in Red step, if the test already exists, ask agent to not generate test for another scenario
 - run_subagent is not called
+- does not ask for a new cycle
 
 backlog amélioration:
 
