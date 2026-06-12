@@ -30,3 +30,13 @@ class NotificationPort(ABC):
     ) -> None:
         """Notify the festivalier that their order has been acknowledged with an ETA."""
         raise NotImplementedError
+
+    @abstractmethod
+    def notify_festivalier_order_ready(
+        self,
+        festivalier_id: str,
+        order_id: str,
+        pickup_details: str,
+    ) -> None:
+        """Notify the festivalier that their order is ready for pickup."""
+        raise NotImplementedError

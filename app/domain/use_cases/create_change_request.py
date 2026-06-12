@@ -4,14 +4,14 @@ from typing import Any, Dict, List
 
 from app.domain.entities.change_request import ChangeRequest
 from app.domain.exceptions import (
-    OrderNotFoundException,
     OrderNotEligibleForChangeRequestException,
+    OrderNotFoundException,
 )
 from app.domain.ports.change_request_repository import ChangeRequestRepository
 from app.domain.ports.notification_port import NotificationPort
 from app.domain.ports.order_repository import OrderRepository
 
-_STATUSES_ELIGIBLE_FOR_CHANGE_REQUEST = {"ACQUITTEE", "PRÊTE"}
+_STATUSES_ELIGIBLE_FOR_CHANGE_REQUEST = {"ACQUITTEE", "PRÊTE", "READY"}
 
 
 @dataclass
