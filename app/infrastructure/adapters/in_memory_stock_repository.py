@@ -18,3 +18,6 @@ class InMemoryStockRepository(StockRepository):
         if current < quantity:
             raise ValueError("Insufficient stock")
         self.stock[item_name] = current - quantity
+
+    def increment(self, item_name: str, quantity: int) -> None:
+        self.stock[item_name] = self.stock.get(item_name, 0) + quantity
