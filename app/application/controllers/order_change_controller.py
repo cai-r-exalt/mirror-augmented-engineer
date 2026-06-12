@@ -163,9 +163,9 @@ class OrderChangeController:
             return errors
 
         for item in items:
-            if not (item.get("name") or item.get("id")):
+            if not item.get("name"):
                 errors.append({"field": "items[].name", "message": "each item must have a name"})
-            qty = item.get("quantity") or item.get("quantite")
+            qty = item.get("quantity")
             if qty is None or not isinstance(qty, int) or qty <= 0:
                 errors.append(
                     {"field": "items[].quantity", "message": "each item must have a positive quantity"}
