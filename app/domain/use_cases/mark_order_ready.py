@@ -6,7 +6,7 @@ from app.domain.entities.commande import Commande
 from app.domain.exceptions import (
     OrderNotFoundException,
     OrderNotReadyTransitionableException,
-    PreparedStockInsuffisantException,
+    PreparedStockInsufficientException,
 )
 from app.domain.ports.notification_port import NotificationPort
 from app.domain.ports.order_repository import OrderRepository
@@ -42,14 +42,8 @@ class MarkOrderReadyUseCase:
         if order.status != "ACKNOWLEDGED":
             raise OrderNotReadyTransitionableException(command.order_id, order.status)
 
-        for line in order.lignes:
-            item_name = line.article.name
-            quantity = line.quantite
-            if not self.stock_repository.is_prepared_in_stock(item_name, quantity):
-                raise PreparedStockInsuffisantException(command.order_id, item_name)
-
-        for line in order.lignes:
-            self.stock_repository.decrement_prepared(line.article.name, line.quantite)
+        self._ensure_prepared_stock_sufficient(command.order_id, order)
+        self._consume_prepared_stock(order)
 
         order.status = "READY"
         order.ready_at = datetime.now(timezone.utc).isoformat()
@@ -68,3 +62,14 @@ class MarkOrderReadyUseCase:
         if order.contributors:
             return [contributor.festivalier_id for contributor in order.contributors]
         return [order.festivalier_id]
+
+    def _ensure_prepared_stock_sufficient(self, order_id: str, order: Commande) -> None:
+        for line in order.lignes:
+            item_name = line.article.name
+            quantity = line.quantite
+            if not self.stock_repository.is_prepared_in_stock(item_name, quantity):
+                raise PreparedStockInsufficientException(order_id, item_name)
+
+    def _consume_prepared_stock(self, order: Commande) -> None:
+        for line in order.lignes:
+            self.stock_repository.decrement_prepared(line.article.name, line.quantite)

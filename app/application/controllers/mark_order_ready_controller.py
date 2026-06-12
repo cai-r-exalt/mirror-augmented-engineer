@@ -2,7 +2,7 @@ from app.application.dto.mark_order_ready import MarkOrderReadyRequest, MarkOrde
 from app.domain.exceptions import (
     OrderNotFoundException,
     OrderNotReadyTransitionableException,
-    PreparedStockInsuffisantException,
+    PreparedStockInsufficientException,
 )
 from app.domain.use_cases.mark_order_ready import (
     DEFAULT_PICKUP_DETAILS,
@@ -27,7 +27,7 @@ class MarkOrderReadyController:
             )
         except OrderNotFoundException as exc:
             return MarkOrderReadyResponse(404, {"error": str(exc)})
-        except PreparedStockInsuffisantException as exc:
+        except PreparedStockInsufficientException as exc:
             return MarkOrderReadyResponse(409, {"error": str(exc)})
         except OrderNotReadyTransitionableException as exc:
             return MarkOrderReadyResponse(422, {"error": str(exc)})

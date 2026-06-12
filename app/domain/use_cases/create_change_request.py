@@ -11,7 +11,7 @@ from app.domain.ports.change_request_repository import ChangeRequestRepository
 from app.domain.ports.notification_port import NotificationPort
 from app.domain.ports.order_repository import OrderRepository
 
-_STATUSES_ELIGIBLE_FOR_CHANGE_REQUEST = {"ACQUITTEE", "PRÊTE", "READY"}
+_STATUSES_ELIGIBLE_FOR_CHANGE_REQUEST = {"ACQUITTEE", "PRÊTE"}
 
 
 @dataclass

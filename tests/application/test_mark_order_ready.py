@@ -1,3 +1,5 @@
+from typing import Any
+
 from app.application.controllers.mark_order_ready_controller import MarkOrderReadyController
 from app.application.dto.mark_order_ready import MarkOrderReadyRequest
 from app.domain.entities.commande import Article, Commande, LigneCommande
@@ -16,7 +18,7 @@ def _build_infrastructure(prepared_stock: dict | None = None):
     return controller, order_repo, notifications
 
 
-def _acknowledged_order(order_id: str, festivalier_id: str, items: list) -> Commande:
+def _acknowledged_order(order_id: str, festivalier_id: str, items: list[dict[str, Any]]) -> Commande:
     lignes = [LigneCommande(article=Article(name=item["name"]), quantite=item["quantity"]) for item in items]
     return Commande(id=order_id, festivalier_id=festivalier_id, lignes=lignes, status="ACKNOWLEDGED")
 

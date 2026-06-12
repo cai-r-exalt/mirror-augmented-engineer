@@ -1,7 +1,11 @@
+from typing import Any
+
+import pytest
+
 from app.domain.entities.commande import Article, Commande, ContributorContribution, LigneCommande
 from app.domain.exceptions import (
     OrderNotReadyTransitionableException,
-    PreparedStockInsuffisantException,
+    PreparedStockInsufficientException,
 )
 from app.domain.use_cases.mark_order_ready import MarkOrderReadyCommand, MarkOrderReadyUseCase
 from app.domain.value_objects.token_contribution import TokenContribution
@@ -10,7 +14,7 @@ from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStock
 from app.infrastructure.adapters.mock_notification_adapter import MockNotificationAdapter
 
 
-def _acknowledged_order(order_id: str, festivalier_id: str, items: list) -> Commande:
+def _acknowledged_order(order_id: str, festivalier_id: str, items: list[dict[str, Any]]) -> Commande:
     lignes = [LigneCommande(article=Article(name=item["name"]), quantite=item["quantity"]) for item in items]
     return Commande(id=order_id, festivalier_id=festivalier_id, lignes=lignes, status="ACKNOWLEDGED")
 
@@ -39,12 +43,8 @@ class TestMarkOrderReadyUseCase:
         use_case = MarkOrderReadyUseCase(order_repo, stock_repo, notifications)
         order_repo.save(_acknowledged_order("order-1", "f-1", [{"name": "Bière", "quantity": 2}]))
 
-        try:
+        with pytest.raises(PreparedStockInsufficientException):
             use_case.execute(MarkOrderReadyCommand(order_id="order-1"))
-        except PreparedStockInsuffisantException:
-            pass
-        else:
-            raise AssertionError("Expected PreparedStockInsuffisantException")
 
         persisted = order_repo.get_by_id("order-1")
         assert persisted is not None
@@ -72,8 +72,10 @@ class TestMarkOrderReadyUseCase:
 
         use_case.execute(MarkOrderReadyCommand(order_id="order-grp"))
 
-        recipients = sorted(notif["festivalier_id"] for notif in notifications.ready_notifications)
-        assert recipients == ["f-1", "f-2"]
+        notified_festivalier_ids = sorted(
+            notif["festivalier_id"] for notif in notifications.ready_notifications
+        )
+        assert notified_festivalier_ids == ["f-1", "f-2"]
 
     def test_raises_when_order_not_acknowledged(self):
         order_repo = InMemoryOrderRepository()
@@ -84,9 +86,5 @@ class TestMarkOrderReadyUseCase:
         order.status = "EN_ATTENTE"
         order_repo.save(order)
 
-        try:
+        with pytest.raises(OrderNotReadyTransitionableException):
             use_case.execute(MarkOrderReadyCommand(order_id="order-1"))
-        except OrderNotReadyTransitionableException:
-            pass
-        else:
-            raise AssertionError("Expected OrderNotReadyTransitionableException")

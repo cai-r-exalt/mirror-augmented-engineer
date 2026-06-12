@@ -107,7 +107,7 @@ class OrderNotReadyTransitionableException(Exception):
         )
 
 
-class PreparedStockInsuffisantException(Exception):
+class PreparedStockInsufficientException(Exception):
     """Raised when prepared item quantity is not sufficient to mark order as ready."""
 
     def __init__(self, order_id: str, item_name: str):
