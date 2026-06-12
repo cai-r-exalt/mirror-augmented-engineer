@@ -77,3 +77,20 @@ class OrderNotEligibleForChangeRequestException(Exception):
         super().__init__(
             f"Order {order_id} with status {current_status} is not eligible for a change request"
         )
+
+
+class OrderNotAcknowledgeableException(Exception):
+    """Raised when an order cannot be acknowledged (wrong status or insufficient stock)."""
+
+    def __init__(self, order_id: str, reason: str):
+        self.order_id = order_id
+        self.reason = reason
+        super().__init__(f"Order {order_id} cannot be acknowledged: {reason}")
+
+
+class OrderAlreadyAcknowledgedException(Exception):
+    """Raised when an acknowledgement is attempted on an already-acknowledged order."""
+
+    def __init__(self, order_id: str):
+        self.order_id = order_id
+        super().__init__(f"Order {order_id} has already been acknowledged")

@@ -30,3 +30,5 @@ class Commande:
     lignes: List[LigneCommande]
     status: str
     contributors: Optional[List[ContributorContribution]] = field(default=None)
+    eta_minutes: Optional[int] = field(default=None)
+    acknowledged_at: Optional[str] = field(default=None)

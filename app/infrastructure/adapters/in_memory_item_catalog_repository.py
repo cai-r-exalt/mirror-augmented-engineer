@@ -9,7 +9,7 @@ class InMemoryItemCatalogRepository(ItemCatalogRepository):
     Stores item pricing keyed by item name.
     """
 
-    def __init__(self, catalog: Dict[str, Dict[str, int]] | None = None) -> None:
+    def __init__(self, catalog: Dict[str, Dict] | None = None) -> None:
         self._catalog: Dict[str, ItemCost] = {}
         if catalog:
             for name, costs in catalog.items():
@@ -17,6 +17,7 @@ class InMemoryItemCatalogRepository(ItemCatalogRepository):
                     name=name,
                     drink_tokens_per_unit=costs.get("drink_tokens_per_unit", 0),
                     food_tokens_per_unit=costs.get("food_tokens_per_unit", 0),
+                    item_type=costs.get("item_type"),
                 )
 
     def get_item_cost(self, item_name: str) -> Optional[ItemCost]:
