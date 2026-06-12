@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
-from app.domain.ports.stock_repository import StockRepository
+from app.domain.exceptions import ArticleInconnuException, StockInsuffisantException
 from app.domain.ports.order_repository import OrderRepository
-from app.domain.exceptions import StockInsuffisantException, ArticleInconnuException
+from app.domain.ports.stock_repository import StockRepository
 
 
 @dataclass
@@ -32,7 +32,6 @@ class PasserCommandeUseCase:
             stock_map = getattr(self.stock_repository, "stock", None)
             if isinstance(stock_map, dict) and name not in stock_map:
                 raise ArticleInconnuException(name)
-
             if not self.stock_repository.is_in_stock(name, qty):
                 raise StockInsuffisantException(name)
 

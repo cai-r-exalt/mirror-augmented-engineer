@@ -18,6 +18,7 @@ testpaths = [
     "tests/application",
     "tests/infrastructure",
 ]
+pythonpath = ["."]
 
 # ─── Linting / formatting (Ruff) ─────────────────────────────────────────────
 [tool.ruff]

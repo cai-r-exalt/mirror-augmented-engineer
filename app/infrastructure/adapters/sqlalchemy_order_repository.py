@@ -8,7 +8,7 @@ from typing import Optional, List, Dict, Any
 
 from app.domain.ports.order_repository import OrderRepository
 
-from app.domain.entities.commande import Commande, LigneCommande, Article
+from app.domain.entities.commande import Commande, LigneCommande, Article, ContributorContribution
 
 
 # Optional SQLAlchemy ORM models for persistence mapping. Import is guarded
@@ -90,6 +90,26 @@ class SQLAlchemyOrderRepository(OrderRepository):
         next_id = f"order-{len(self._store) + 1}"
         lignes = [LigneCommande(article=Article(name=i["name"]), quantite=i["quantity"]) for i in items]
         commande = Commande(id=next_id, festivalier_id=festivalier_id, lignes=lignes, status="EN_ATTENTE")
+        self.save(commande)
+        return commande
+
+    def create_group_order(
+        self,
+        contributors: List[ContributorContribution],
+        items: List[Dict[str, Any]],
+    ) -> Commande:
+        next_id = f"order-{len(self._store) + 1}"
+        lignes = [
+            LigneCommande(article=Article(name=i["name"]), quantite=i["quantity"])
+            for i in items
+        ]
+        commande = Commande(
+            id=next_id,
+            festivalier_id="GROUP",
+            lignes=lignes,
+            status="EN_ATTENTE",
+            contributors=contributors,
+        )
         self.save(commande)
         return commande
 

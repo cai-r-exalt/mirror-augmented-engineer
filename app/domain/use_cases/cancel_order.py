@@ -1,4 +1,3 @@
-from typing import Optional
 
 from app.domain.ports.order_repository import OrderRepository
 

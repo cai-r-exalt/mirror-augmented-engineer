@@ -19,6 +19,9 @@ class FakeOrderRepository(OrderRepository):
         if order_id in self._store:
             self._store[order_id].status = status
 
+    def create_group_order(self, contributors, items):
+        raise NotImplementedError
+
     def find_by_festivalier_and_status(self, festivalier_id: str, status: str):
         return [c for c in self._store.values() if c.festivalier_id == festivalier_id and c.status == status]
 
