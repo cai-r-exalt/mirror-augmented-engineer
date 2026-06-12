@@ -184,7 +184,7 @@ class TestAcknowledgeOrderETACalculation:
         ])
         self.order_repo.save(order)
         result = self._ack("o-1")
-        assert result.eta_minutes == 12  # 1 (non-alc) + 11 (meal + longest_drink=1)
+        assert result.eta_minutes == 12  # 1 (non-alc) + (10 (meal base) + 1 (longest_drink)) = 12
 
     def test_eta_meal_with_normal_alcoholic_drink(self):
         """1 meal type + 2 normal alc → normal_alc=4, meal=10+2=12 → total=16."""

@@ -211,7 +211,11 @@ class AcknowledgeOrderUseCase:
             )
 
     def _resolve_festivalier_id(self, order: Commande) -> str:
-        """Return a representative festivalier id for notifications."""
+        """Return a representative festivalier id for notifications.
+
+        For group orders the first contributor is notified; future iterations
+        could fan-out to all contributors.
+        """
         if order.contributors:
             return order.contributors[0].festivalier_id
         return order.festivalier_id

@@ -36,7 +36,7 @@ class AcknowledgeOrderController:
         except OrderNotAcknowledgeableException as exc:
             return AcknowledgeOrderResponse(422, {"error": str(exc)})
         except (ArticleInconnuException, StockInsuffisantException) as exc:
-            return AcknowledgeOrderResponse(409, {"error": str(exc)})
+            return AcknowledgeOrderResponse(422, {"error": str(exc)})
         except FestivalierInconnuException as exc:
             return AcknowledgeOrderResponse(404, {"error": str(exc)})
 
