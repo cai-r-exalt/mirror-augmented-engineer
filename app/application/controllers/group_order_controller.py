@@ -34,7 +34,10 @@ class GroupOrderController:
 
         command = PlaceGroupOrderCommand(
             items=[
-                {"name": item.get("id") or item.get("name"), "quantity": item.get("quantity") or item.get("quantite")}
+                {
+                    "name": item.get("id") or item.get("name"),
+                    "quantity": item.get("quantity") if item.get("quantity") is not None else item.get("quantite"),
+                }
                 for item in req.items
             ],
             contributors=[
