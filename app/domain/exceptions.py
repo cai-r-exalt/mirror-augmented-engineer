@@ -39,3 +39,41 @@ class FestivalierInconnuException(Exception):
     def __init__(self, festivalier_id: str):
         self.festivalier_id = festivalier_id
         super().__init__(f"Unknown festivalier: {festivalier_id}")
+
+
+class OrderNotFoundException(Exception):
+    """Raised when an order cannot be found by its id."""
+
+    def __init__(self, order_id: str):
+        self.order_id = order_id
+        super().__init__(f"Order not found: {order_id}")
+
+
+class OrderNotModifiableException(Exception):
+    """Raised when a direct modification is attempted on an order that is not in EN_ATTENTE status."""
+
+    def __init__(self, order_id: str, current_status: str):
+        self.order_id = order_id
+        self.current_status = current_status
+        super().__init__(
+            f"Order {order_id} cannot be directly modified in status {current_status}"
+        )
+
+
+class ChangeRequestNotFoundException(Exception):
+    """Raised when a change request cannot be found by its id."""
+
+    def __init__(self, request_id: str):
+        self.request_id = request_id
+        super().__init__(f"Change request not found: {request_id}")
+
+
+class OrderNotEligibleForChangeRequestException(Exception):
+    """Raised when a change request is attempted on an order that is not acknowledged."""
+
+    def __init__(self, order_id: str, current_status: str):
+        self.order_id = order_id
+        self.current_status = current_status
+        super().__init__(
+            f"Order {order_id} with status {current_status} is not eligible for a change request"
+        )

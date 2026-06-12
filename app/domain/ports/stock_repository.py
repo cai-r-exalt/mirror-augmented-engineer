@@ -13,3 +13,7 @@ class StockRepository(ABC):
     @abstractmethod
     def decrement(self, item_name: str, quantity: int) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    def increment(self, item_name: str, quantity: int) -> None:
+        raise NotImplementedError
