@@ -25,3 +25,8 @@ class StockRepository(ABC):
     @abstractmethod
     def decrement_prepared(self, item_name: str, quantity: int) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    def get_prepared_quantity(self, item_name: str) -> int:
+        """Return the current quantity available in prepared stock for the given item."""
+        raise NotImplementedError

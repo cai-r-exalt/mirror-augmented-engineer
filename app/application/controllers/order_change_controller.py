@@ -28,7 +28,6 @@ from app.domain.use_cases.resolve_change_request import (
     ResolveChangeRequestUseCase,
 )
 
-
 class OrderChangeController:
     """Controller handling order-modification and change-request endpoints.
 
@@ -137,6 +136,7 @@ class OrderChangeController:
                     order_id=req.order_id,
                     request_id=req.request_id,
                     accept=req.accept,
+                    resolver_id=req.resolver_id,
                     rejection_reason=req.rejection_reason,
                 )
             )
@@ -145,14 +145,18 @@ class OrderChangeController:
         except ChangeRequestNotFoundException as exc:
             return OrderChangeResponse(404, {"error": str(exc)})
 
-        return OrderChangeResponse(
-            200,
-            {
-                "changeRequestId": result.id,
-                "status": result.status,
-                "rejectionReason": result.rejection_reason,
-            },
-        )
+        cr = result.change_request
+        body: dict = {
+            "changeRequestId": cr.id,
+            "status": cr.status,
+            "rejectionReason": cr.rejection_reason,
+            "resolvedAt": cr.resolved_at,
+        }
+
+        if req.accept:
+            body["newEtaMinutes"] = result.new_eta_minutes
+
+        return OrderChangeResponse(200, body)
 
     # ── Private helpers ───────────────────────────────────────────────────────
 

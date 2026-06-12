@@ -17,8 +17,13 @@ class NotificationPort(ABC):
         order_id: str,
         accepted: bool,
         rejection_reason: Optional[str] = None,
+        new_eta_minutes: Optional[int] = None,
     ) -> None:
-        """Notify the festivalier of the bartender's resolution of a change request."""
+        """Notify the festivalier of the bartender's resolution of a change request.
+
+        When *accepted* is ``True`` and ``new_eta_minutes`` is provided, the
+        notification should include the updated estimated preparation time.
+        """
         raise NotImplementedError
 
     @abstractmethod

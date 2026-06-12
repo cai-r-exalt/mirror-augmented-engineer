@@ -26,11 +26,13 @@ class ResolveChangeRequestRequest:
         request_id: str,
         accept: bool,
         rejection_reason: Optional[str] = None,
+        resolver_id: Optional[str] = None,
     ) -> None:
         self.order_id = order_id
         self.request_id = request_id
         self.accept = accept
         self.rejection_reason = rejection_reason
+        self.resolver_id = resolver_id
 
 
 class OrderChangeResponse:

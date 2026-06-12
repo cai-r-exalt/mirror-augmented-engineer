@@ -9,6 +9,8 @@ class ChangeRequest:
     A bartender must resolve (accept or reject) the request. When accepted,
     the underlying order's items are updated. When rejected, the rejection
     reason is recorded and the festivalier is notified.
+
+    Audit fields (resolver_id, resolved_at) are set when the request is resolved.
     """
 
     id: str
@@ -16,3 +18,5 @@ class ChangeRequest:
     proposed_items: List[Dict[str, Any]]
     status: str = field(default="EN_ATTENTE_REVIEW")
     rejection_reason: Optional[str] = field(default=None)
+    resolver_id: Optional[str] = field(default=None)
+    resolved_at: Optional[str] = field(default=None)

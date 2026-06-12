@@ -26,6 +26,7 @@ class MockNotificationAdapter(NotificationPort):
         order_id: str,
         accepted: bool,
         rejection_reason: Optional[str] = None,
+        new_eta_minutes: Optional[int] = None,
     ) -> None:
         self.festivalier_notifications.append(
             {
@@ -33,6 +34,7 @@ class MockNotificationAdapter(NotificationPort):
                 "order_id": order_id,
                 "accepted": accepted,
                 "rejection_reason": rejection_reason,
+                "new_eta_minutes": new_eta_minutes,
             }
         )
 

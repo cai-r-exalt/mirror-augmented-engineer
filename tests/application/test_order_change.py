@@ -13,6 +13,7 @@ from app.application.dto.order_change import (
     ResolveChangeRequestRequest,
 )
 from app.domain.entities.commande import Article, Commande, LigneCommande
+from app.domain.ports.item_catalog_repository import ITEM_TYPE_NORMAL_ALCOHOLIC_DRINK, ItemCost
 from app.domain.use_cases.create_change_request import CreateChangeRequestUseCase
 from app.domain.use_cases.list_change_requests import ListChangeRequestsUseCase
 from app.domain.use_cases.modify_order import ModifyOrderUseCase
@@ -20,9 +21,19 @@ from app.domain.use_cases.resolve_change_request import ResolveChangeRequestUseC
 from app.infrastructure.adapters.in_memory_change_request_repository import (
     InMemoryChangeRequestRepository,
 )
+from app.infrastructure.adapters.in_memory_item_catalog_repository import (
+    InMemoryItemCatalogRepository,
+)
 from app.infrastructure.adapters.in_memory_order_repository import InMemoryOrderRepository
 from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
 from app.infrastructure.adapters.mock_notification_adapter import MockNotificationAdapter
+
+
+def _build_catalog(*item_names: str) -> InMemoryItemCatalogRepository:
+    catalog = InMemoryItemCatalogRepository()
+    for name in item_names:
+        catalog.register(ItemCost(name=name, item_type=ITEM_TYPE_NORMAL_ALCOHOLIC_DRINK))
+    return catalog
 
 
 def _build_controller():
@@ -30,6 +41,7 @@ def _build_controller():
     stock_repo = InMemoryStockRepository({"Mojito": 10, "Bière": 8, "Eau plate": 20})
     change_request_repo = InMemoryChangeRequestRepository()
     notifications = MockNotificationAdapter()
+    catalog_repo = _build_catalog("Mojito", "Bière", "Eau plate")
 
     modify_uc = ModifyOrderUseCase(order_repository=order_repo, stock_repository=stock_repo)
     create_cr_uc = CreateChangeRequestUseCase(
@@ -45,6 +57,8 @@ def _build_controller():
         order_repository=order_repo,
         change_request_repository=change_request_repo,
         notification_port=notifications,
+        stock_repository=stock_repo,
+        item_catalog_repository=catalog_repo,
     )
 
     controller = OrderChangeController(
@@ -270,6 +284,10 @@ class TestResolveChangeRequestEndpoint:
         assert response.status_code == 200
         body = response.json()
         assert body["status"] == "ACCEPTEE"
+        assert "newEtaMinutes" in body
+        assert isinstance(body["newEtaMinutes"], int)
+        assert "resolvedAt" in body
+        assert body["resolvedAt"] is not None
 
     def test_returns_200_when_bartender_rejects_with_reason(self):
         req = ResolveChangeRequestRequest(
@@ -284,6 +302,8 @@ class TestResolveChangeRequestEndpoint:
         body = response.json()
         assert body["status"] == "REJETEE"
         assert body["rejectionReason"] == "Items already prepared"
+        assert "resolvedAt" in body
+        assert body["resolvedAt"] is not None
 
     def test_returns_404_when_order_not_found(self):
         req = ResolveChangeRequestRequest(
@@ -305,3 +325,47 @@ class TestResolveChangeRequestEndpoint:
         )
         response = self.controller.resolve_change_request(req)
         assert response.status_code == 400
+
+    def test_accept_with_prepared_transfer_returns_reduced_eta(self):
+        """
+        Scenario (application layer): Accept change when transfer possible
+        Given Bière x1 is already in prepared stock (partial cover of Bière x3)
+        When bartender accepts the change request
+        Then newEtaMinutes covers only Bière x2 remaining (4 min)
+        """
+        # Bière x1 already prepared → only Bière x2 still needs prep
+        self.stock_repo.prepared_stock["Bière"] = 1
+
+        req = ResolveChangeRequestRequest(
+            order_id="order-1",
+            request_id=self.change_request_id,
+            accept=True,
+            resolver_id="bartender-1",
+        )
+        response = self.controller.resolve_change_request(req)
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["status"] == "ACCEPTEE"
+        # Bière x2 remaining → 2 min × 2 = 4 min
+        assert body["newEtaMinutes"] == 4
+
+    def test_accept_without_prepared_transfer_returns_full_eta(self):
+        """
+        Scenario (application layer): Accept change when no transfer possible
+        Given no prepared stock exists
+        When bartender accepts the change request (Bière x3)
+        Then newEtaMinutes covers the full proposed composition (6 min)
+        """
+        req = ResolveChangeRequestRequest(
+            order_id="order-1",
+            request_id=self.change_request_id,
+            accept=True,
+        )
+        response = self.controller.resolve_change_request(req)
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["status"] == "ACCEPTEE"
+        # Bière x3 needs full prep → 2 min × 3 = 6 min
+        assert body["newEtaMinutes"] == 6
