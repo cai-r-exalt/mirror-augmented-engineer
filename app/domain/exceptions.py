@@ -94,3 +94,25 @@ class OrderAlreadyAcknowledgedException(Exception):
     def __init__(self, order_id: str):
         self.order_id = order_id
         super().__init__(f"Order {order_id} has already been acknowledged")
+
+
+class OrderNotReadyTransitionableException(Exception):
+    """Raised when an order cannot be transitioned to READY from its current status."""
+
+    def __init__(self, order_id: str, current_status: str):
+        self.order_id = order_id
+        self.current_status = current_status
+        super().__init__(
+            f"Order {order_id} cannot be marked as ready in status {current_status}"
+        )
+
+
+class PreparedStockInsufficientException(Exception):
+    """Raised when prepared item quantity is not sufficient to mark order as ready."""
+
+    def __init__(self, order_id: str, item_name: str):
+        self.order_id = order_id
+        self.item_name = item_name
+        super().__init__(
+            f"Insufficient prepared quantity for {item_name} to mark order {order_id} as ready"
+        )

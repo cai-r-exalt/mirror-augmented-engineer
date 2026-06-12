@@ -17,3 +17,11 @@ class StockRepository(ABC):
     @abstractmethod
     def increment(self, item_name: str, quantity: int) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    def is_prepared_in_stock(self, item_name: str, quantity: int) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def decrement_prepared(self, item_name: str, quantity: int) -> None:
+        raise NotImplementedError

@@ -13,6 +13,7 @@ class MockNotificationAdapter(NotificationPort):
         self.bartender_notifications: List[dict] = []
         self.festivalier_notifications: List[dict] = []
         self.acknowledgement_notifications: List[dict] = []
+        self.ready_notifications: List[dict] = []
 
     def notify_bartender_change_requested(self, order_id: str, change_request_id: str) -> None:
         self.bartender_notifications.append(
@@ -46,5 +47,19 @@ class MockNotificationAdapter(NotificationPort):
                 "festivalier_id": festivalier_id,
                 "order_id": order_id,
                 "eta_minutes": eta_minutes,
+            }
+        )
+
+    def notify_festivalier_order_ready(
+        self,
+        festivalier_id: str,
+        order_id: str,
+        pickup_details: str,
+    ) -> None:
+        self.ready_notifications.append(
+            {
+                "festivalier_id": festivalier_id,
+                "order_id": order_id,
+                "pickup_details": pickup_details,
             }
         )
