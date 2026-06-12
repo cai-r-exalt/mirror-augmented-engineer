@@ -1,12 +1,20 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
-from app.domain.entities.commande import Commande
+from app.domain.entities.commande import Commande, ContributorContribution
 
 
 class OrderRepository(ABC):
     @abstractmethod
     def create_order(self, festivalier_id: str, items: List[Dict[str, Any]]) -> Commande:
+        raise NotImplementedError
+
+    @abstractmethod
+    def create_group_order(
+        self,
+        contributors: List[ContributorContribution],
+        items: List[Dict[str, Any]],
+    ) -> Commande:
         raise NotImplementedError
 
     @abstractmethod

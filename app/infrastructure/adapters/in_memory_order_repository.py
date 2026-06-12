@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional
-from app.domain.entities.commande import Commande, Article, LigneCommande
+
+from app.domain.entities.commande import Article, Commande, ContributorContribution, LigneCommande
 
 
 class InMemoryOrderRepository:
@@ -18,6 +19,30 @@ class InMemoryOrderRepository:
             lignes.append(LigneCommande(article=Article(name=name), quantite=qty))
 
         commande = Commande(id=cid, festivalier_id=festivalier_id, lignes=lignes, status="EN_ATTENTE")
+        self._store[cid] = commande
+        return commande
+
+    def create_group_order(
+        self,
+        contributors: List[ContributorContribution],
+        items: List[dict],
+    ) -> Commande:
+        cid = f"order-{self._next}"
+        self._next += 1
+
+        lignes: List[LigneCommande] = []
+        for it in items:
+            name = it.get("name") or it.get("id")
+            qty = it.get("quantity") or it.get("quantite") or 0
+            lignes.append(LigneCommande(article=Article(name=name), quantite=qty))
+
+        commande = Commande(
+            id=cid,
+            festivalier_id="GROUP",
+            lignes=lignes,
+            status="EN_ATTENTE",
+            contributors=contributors,
+        )
         self._store[cid] = commande
         return commande
 

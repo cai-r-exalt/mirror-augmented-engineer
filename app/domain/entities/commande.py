@@ -1,5 +1,7 @@
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+from app.domain.value_objects.token_contribution import TokenContribution
 
 
 @dataclass
@@ -14,8 +16,17 @@ class LigneCommande:
 
 
 @dataclass
+class ContributorContribution:
+    """Records a single contributor's token commitment to a group order."""
+
+    festivalier_id: str
+    contribution: TokenContribution
+
+
+@dataclass
 class Commande:
     id: str
     festivalier_id: str
     lignes: List[LigneCommande]
     status: str
+    contributors: Optional[List[ContributorContribution]] = field(default=None)
