@@ -7,5 +7,9 @@ class StockRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def item_exists(self, item_name: str) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
     def decrement(self, item_name: str, quantity: int) -> None:
         raise NotImplementedError

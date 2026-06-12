@@ -10,6 +10,9 @@ class InMemoryStockRepository(StockRepository):
     def is_in_stock(self, item_name: str, quantity: int) -> bool:
         return self.stock.get(item_name, 0) >= quantity
 
+    def item_exists(self, item_name: str) -> bool:
+        return item_name in self.stock
+
     def decrement(self, item_name: str, quantity: int) -> None:
         current = self.stock.get(item_name, 0)
         if current < quantity:

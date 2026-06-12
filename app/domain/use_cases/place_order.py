@@ -32,7 +32,6 @@ class PasserCommandeUseCase:
             stock_map = getattr(self.stock_repository, "stock", None)
             if isinstance(stock_map, dict) and name not in stock_map:
                 raise ArticleInconnuException(name)
-
             if not self.stock_repository.is_in_stock(name, qty):
                 raise StockInsuffisantException(name)
 

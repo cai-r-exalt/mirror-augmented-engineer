@@ -71,10 +71,12 @@ class PlaceGroupOrderUseCase:
             for c in command.contributors
         ]
 
+        commande = self.order_repository.create_group_order(contributors_data, command.items)
+
         for item in command.items:
             self.stock_repository.decrement(item["name"], item["quantity"])
 
-        return self.order_repository.create_group_order(contributors_data, command.items)
+        return commande
 
     # ── Private helpers ─────────────────────────────────────────────────────
 
@@ -83,8 +85,7 @@ class PlaceGroupOrderUseCase:
             name = item["name"]
             qty = item["quantity"]
 
-            stock_map = getattr(self.stock_repository, "stock", None)
-            if isinstance(stock_map, dict) and name not in stock_map:
+            if not self.stock_repository.item_exists(name):
                 raise ArticleInconnuException(name)
 
             if not self.stock_repository.is_in_stock(name, qty):
