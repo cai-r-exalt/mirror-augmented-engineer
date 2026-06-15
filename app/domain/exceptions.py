@@ -168,3 +168,19 @@ class TransferUnauthorizedException(Exception):
         super().__init__(
             f"Festivalier {festivalier_id} is not the recipient of transfer {transfer_id}"
         )
+
+
+class ItemNotFoundException(Exception):
+    """Raised when an item cannot be found in the stock repository."""
+
+    def __init__(self, item_id: str):
+        self.item_id = item_id
+        super().__init__(f"Item not found: {item_id}")
+
+
+class InvalidStockQuantityException(Exception):
+    """Raised when a stock quantity update is attempted with an invalid (negative) value."""
+
+    def __init__(self, quantity: int):
+        self.quantity = quantity
+        super().__init__(f"Stock quantity cannot be negative: {quantity}")
