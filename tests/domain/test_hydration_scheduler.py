@@ -10,8 +10,6 @@ Covers:
 
 from datetime import datetime, timezone
 
-import pytest
-
 from app.domain.ports.item_catalog_repository import (
     ITEM_TYPE_NON_ALCOHOLIC_DRINK,
     ITEM_TYPE_NORMAL_ALCOHOLIC_DRINK,
@@ -19,7 +17,6 @@ from app.domain.ports.item_catalog_repository import (
     ItemCost,
 )
 from app.domain.use_cases.hydration_scheduler import (
-    HEAVY_DRINKER_THRESHOLD,
     HydrationSchedulerUseCase,
 )
 from app.infrastructure.adapters.in_memory_festivalier_repository import (
@@ -34,7 +31,6 @@ from app.infrastructure.adapters.in_memory_order_repository import (
 from app.infrastructure.adapters.mock_notification_adapter import (
     MockNotificationAdapter,
 )
-
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 

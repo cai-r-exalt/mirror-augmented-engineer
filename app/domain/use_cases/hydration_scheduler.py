@@ -11,7 +11,7 @@ Business rules:
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import List
 
 from app.domain.ports.festivalier_repository import FestivalierRepository
 from app.domain.ports.item_catalog_repository import (
