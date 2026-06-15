@@ -2279,7 +2279,7 @@ Before committing code, verify:
 - ✅ Type hints on all functions and class attributes
 - ✅ Google-style docstrings on public functions/classes
 - ✅ Import organization: stdlib → third-party → local
-- ✅ Ruff compliance: `ruff check --fix && ruff format`
+- ✅ **CRITICAL** Ruff compliance: `uv run ruff check .`
 - ✅ No circular dependencies between layers
 - ✅ Domain entities enforce invariants; no anemic models
 - ✅ Repositories return domain entities, never ORM models
