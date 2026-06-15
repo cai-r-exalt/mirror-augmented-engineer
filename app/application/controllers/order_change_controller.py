@@ -28,6 +28,7 @@ from app.domain.use_cases.resolve_change_request import (
     ResolveChangeRequestUseCase,
 )
 
+
 class OrderChangeController:
     """Controller handling order-modification and change-request endpoints.
 
