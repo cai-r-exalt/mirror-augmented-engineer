@@ -25,6 +25,9 @@ class FakeOrderRepository(OrderRepository):
     def find_by_festivalier_and_status(self, festivalier_id: str, status: str):
         return [c for c in self._store.values() if c.festivalier_id == festivalier_id and c.status == status]
 
+    def find_by_festivalier_acknowledged_since(self, festivalier_id: str, since):
+        raise NotImplementedError
+
 
 def test_given_pending_order_when_cancel_then_status_becomes_annule():
     # Given: a saved order with status EN_ATTENTE

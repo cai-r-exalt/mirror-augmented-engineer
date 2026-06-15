@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 from app.domain.ports.festivalier_repository import FestivalierRepository
 from app.domain.value_objects.token_contribution import TokenContribution
@@ -21,6 +21,9 @@ class InMemoryFestivalierRepository(FestivalierRepository):
 
     def get_balance(self, festivalier_id: str) -> Optional[TokenContribution]:
         return self._balances.get(festivalier_id)
+
+    def list_all_ids(self) -> List[str]:
+        return list(self._balances.keys())
 
     def set_balance(self, festivalier_id: str, contribution: TokenContribution) -> None:
         self._balances[festivalier_id] = contribution

@@ -68,3 +68,15 @@ class NotificationPort(ABC):
     ) -> None:
         """Notify both sender and recipient about the transfer finalization."""
         raise NotImplementedError
+
+    @abstractmethod
+    def notify_festivalier_hydration_reminder(
+        self,
+        festivalier_id: str,
+        tips: Optional[str] = None,
+    ) -> None:
+        """Send a hydration reminder to the festivalier.
+
+        ``tips`` may contain optional responsible-drinking advice.
+        """
+        raise NotImplementedError

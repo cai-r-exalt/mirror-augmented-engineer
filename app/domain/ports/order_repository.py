@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from app.domain.entities.commande import Commande, ContributorContribution
@@ -31,4 +32,11 @@ class OrderRepository(ABC):
 
     @abstractmethod
     def find_by_festivalier_and_status(self, festivalier_id: str, status: str) -> List[Commande]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def find_by_festivalier_acknowledged_since(
+        self, festivalier_id: str, since: datetime
+    ) -> List[Commande]:
+        """Return all orders for a festivalier with acknowledged_at >= since."""
         raise NotImplementedError
