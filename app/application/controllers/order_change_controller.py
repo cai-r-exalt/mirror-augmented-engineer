@@ -9,8 +9,8 @@ from app.application.dto.order_change import (
 from app.domain.exceptions import (
     ArticleInconnuException,
     ChangeRequestNotFoundException,
-    OrderNotFoundException,
     OrderNotEligibleForChangeRequestException,
+    OrderNotFoundException,
     OrderNotModifiableException,
     StockInsuffisantException,
 )

@@ -12,8 +12,8 @@ import pytest
 from app.domain.entities.commande import Article, Commande, LigneCommande
 from app.domain.exceptions import (
     ChangeRequestNotFoundException,
-    OrderNotFoundException,
     OrderNotEligibleForChangeRequestException,
+    OrderNotFoundException,
 )
 from app.domain.ports.item_catalog_repository import (
     ITEM_TYPE_NORMAL_ALCOHOLIC_DRINK,

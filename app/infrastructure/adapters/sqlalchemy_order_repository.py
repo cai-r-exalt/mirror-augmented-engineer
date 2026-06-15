@@ -4,18 +4,16 @@ This is a small in-memory implementation intended to replace test-local
 fakes during the refactor step. It keeps behaviour identical to the
 previous test-local class (dict-backed store) so tests remain green.
 """
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
 
+from app.domain.entities.commande import Article, Commande, ContributorContribution, LigneCommande
 from app.domain.ports.order_repository import OrderRepository
-
-from app.domain.entities.commande import Commande, LigneCommande, Article, ContributorContribution
-
 
 # Optional SQLAlchemy ORM models for persistence mapping. Import is guarded
 # so tests or environments without SQLAlchemy still work using the in-memory
 # fallback implementation.
 try:
-    from sqlalchemy import Column, Integer, String, ForeignKey
+    from sqlalchemy import Column, ForeignKey, Integer, String
     from sqlalchemy.orm import declarative_base, relationship
 
     Base = declarative_base()
@@ -53,15 +51,33 @@ class SQLAlchemyOrderRepository(OrderRepository):
 
     def _model_to_domain(self, orm_order: Any) -> Commande:
         # Convert ORM to domain Commande (only used if SQLAlchemy models are used)
-        lignes = [LigneCommande(article=Article(name=item.article_name), quantite=item.quantite) for item in getattr(orm_order, "items", [])]
-        return Commande(id=orm_order.id, festivalier_id=orm_order.festivalier_id, lignes=lignes, status=orm_order.status)
+        lignes = [
+            LigneCommande(
+                article=Article(name=item.article_name),
+                quantite=item.quantite,
+            )
+            for item in getattr(orm_order, "items", [])
+        ]
+        return Commande(
+            id=orm_order.id,
+            festivalier_id=orm_order.festivalier_id,
+            lignes=lignes,
+            status=orm_order.status,
+        )
 
     def _domain_to_model(self, commande: Commande) -> Any:
         # Convert domain Commande to ORM structure (if SQLAlchemy available)
         if Base is None:
             return None
-        order = OrderORM(id=commande.id, festivalier_id=commande.festivalier_id, status=commande.status)
-        order.items = [OrderItemORM(article_name=l.article.name, quantite=l.quantite) for l in commande.lignes]
+        order = OrderORM(
+            id=commande.id,
+            festivalier_id=commande.festivalier_id,
+            status=commande.status,
+        )
+        order.items = [
+            OrderItemORM(article_name=ligne.article.name, quantite=ligne.quantite)
+            for ligne in commande.lignes
+        ]
         return order
 
     def create_order(self, festivalier_id: str, items: List[Dict[str, Any]]) -> Commande:
@@ -70,7 +86,10 @@ class SQLAlchemyOrderRepository(OrderRepository):
             # Use the DB to create a persistent order
             # Generate a simple id here; in real DB you'd use a UUID or DB-side id
             next_id = f"order-db-{len(self._store) + 1}"
-            lignes = [LigneCommande(article=Article(name=i["name"]), quantite=i["quantity"]) for i in items]
+            lignes = [
+                LigneCommande(article=Article(name=i["name"]), quantite=i["quantity"])
+                for i in items
+            ]
             commande = Commande(id=next_id, festivalier_id=festivalier_id, lignes=lignes, status="EN_ATTENTE")
             orm = self._domain_to_model(commande)
             # persist via session
@@ -88,7 +107,10 @@ class SQLAlchemyOrderRepository(OrderRepository):
             return domain
 
         next_id = f"order-{len(self._store) + 1}"
-        lignes = [LigneCommande(article=Article(name=i["name"]), quantite=i["quantity"]) for i in items]
+        lignes = [
+            LigneCommande(article=Article(name=i["name"]), quantite=i["quantity"])
+            for i in items
+        ]
         commande = Commande(id=next_id, festivalier_id=festivalier_id, lignes=lignes, status="EN_ATTENTE")
         self.save(commande)
         return commande
@@ -162,7 +184,18 @@ class SQLAlchemyOrderRepository(OrderRepository):
 
     def find_by_festivalier_and_status(self, festivalier_id: str, status: str) -> List[Commande]:
         if self._session is not None and Base is not None:
-            orms = self._session.query(OrderORM).filter(OrderORM.festivalier_id == festivalier_id, OrderORM.status == status).all()
+            orms = (
+                self._session.query(OrderORM)
+                .filter(
+                    OrderORM.festivalier_id == festivalier_id,
+                    OrderORM.status == status,
+                )
+                .all()
+            )
             return [self._model_to_domain(o) for o in orms]
 
-        return [c for c in self._store.values() if c.festivalier_id == festivalier_id and c.status == status]
+        return [
+            c
+            for c in self._store.values()
+            if c.festivalier_id == festivalier_id and c.status == status
+        ]

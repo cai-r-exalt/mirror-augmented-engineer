@@ -4,9 +4,9 @@ class TestCreateOrderApplicationEndToEnd:
         self.festivalier_id = "festivalier-42"
 
         # Wire controller to a small application-level use-case
-        from app.application.use_cases.simple_order_use_case import SimpleOrderUseCase
         from app.application.controllers.commande_controller import CommandesController
         from app.application.dto.commande import CreerCommandeRequest
+        from app.application.use_cases.simple_order_use_case import SimpleOrderUseCase
 
         self.client = CommandesController(use_case=SimpleOrderUseCase())
         self.CreerCommandeRequest = CreerCommandeRequest

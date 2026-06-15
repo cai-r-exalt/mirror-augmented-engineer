@@ -1,6 +1,7 @@
 import re
 import sys
 
+
 def validate_issue_format(content):
     """
     Validate high-level issue structure and basic Gherkin syntax.
@@ -14,11 +15,11 @@ def validate_issue_format(content):
 
     # Context (accept English/French)
     if not re.search(r'\*\*(Context|Contexte)\*\*\s*\n\s*.+', content):
-        errors.append("Context section is missing or malformed. Expect a '**Context**' section with at least one non-empty line.")
+        errors.append("Context section missing or malformed; expect a '**Context**' section.")
 
     # Acceptance criteria header (accept English/French)
     if not re.search(r'\*\*(Acceptance Criteria|Critères d\'acceptation|Acceptance)\*\*', content):
-        errors.append("Acceptance Criteria section is missing or malformed. Expect '**Acceptance Criteria**' header.")
+        errors.append("Acceptance Criteria header missing or malformed.")
 
     # Gherkin: Feature present
     if not re.search(r'(?m)^\s*Feature:.*$', content):
@@ -47,17 +48,20 @@ def validate_issue_format(content):
             if not has_then:
                 missing.append("Then")
             if missing:
-                errors.append(f"Scenario '{title}' is missing steps: {', '.join(missing)}.")
+                missing_str = ', '.join(missing)
+                errors.append(f"Scenario '{title}' is missing steps: {missing_str}.")
             else:
                 if not (has_given.start() < has_when.start() < has_then.start()):
-                    errors.append(f"Scenario '{title}' steps ordering seems incorrect. Expect Given -> When -> Then.")
+                    errors.append(f"Scenario '{title}' steps ordering incorrect (expect Given->When->Then).")
 
             bad_steps = []
             for line in block.splitlines():
-                if re.match(r'^\s*(Given|When|Then|And)\b', line) and not re.match(r'^\s*(Given|When|Then|And)\s+\S', line):
+                step_start = re.match(r'^\s*(Given|When|Then|And)\b', line)
+                step_ok = re.match(r'^\s*(Given|When|Then|And)\s+\S', line)
+                if step_start and not step_ok:
                     bad_steps.append(line.strip())
             if bad_steps:
-                errors.append(f"Scenario '{title}' has malformed step lines: {bad_steps}")
+                errors.append(f"Scenario '{title}' has malformed step lines.")
 
     return (len(errors) == 0, errors)
 

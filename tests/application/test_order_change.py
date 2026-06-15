@@ -4,7 +4,6 @@ These tests exercise the full wiring through controller → use cases → in-mem
 adapters and verify correct HTTP status codes and response shapes.
 """
 
-import pytest
 
 from app.application.controllers.order_change_controller import OrderChangeController
 from app.application.dto.order_change import (

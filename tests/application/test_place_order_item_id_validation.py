@@ -1,4 +1,3 @@
-import pytest
 
 from app.application.controllers.commande_controller import CommandesController
 from app.application.dto.commande import CreerCommandeRequest
@@ -7,8 +6,8 @@ from app.domain.use_cases.place_order import PasserCommandeUseCase
 
 class TestPlaceOrderMissingItemId:
     def setup_method(self):
-        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
         from app.infrastructure.adapters.in_memory_order_repository import InMemoryOrderRepository
+        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
 
         self.fake_inventory = InMemoryStockRepository({"Mojito": 5})
         self.fake_order_repo = InMemoryOrderRepository()

@@ -20,13 +20,11 @@ Publishing:
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 from pathlib import Path
-from urllib.request import Request, urlopen
 from urllib.error import HTTPError
-
+from urllib.request import Request, urlopen
 
 # Adjusted ROOT because this script now lives in /scripts
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,7 +44,8 @@ def render_issue(title: str, context: str, gherkin: str) -> str:
     content = tmpl
     content = content.replace('{{title}}', title)
     content = content.replace('{{context}}', context)
-    content = content.replace('{{gherkin scenarios ; each scenario must get a header with a number}}', gherkin)
+    placeholder = '{{gherkin scenarios ; each scenario must get a header with a number}}'
+    content = content.replace(placeholder, gherkin)
     return content
 
 
@@ -98,7 +97,15 @@ def publish_github_issue(repo: str, token: str, title: str, body: str, labels=No
             return False, {'message': str(e)}
 
 
-def publish_via_mcp_github_copilot(endpoint: str, token: str, owner_repo: str, title: str, body: str, labels=None, assignees=None):
+def publish_via_mcp_github_copilot(
+    endpoint: str,
+    token: str,
+    owner_repo: str,
+    title: str,
+    body: str,
+    labels=None,
+    assignees=None,
+) :
     """Publish issue via the GitHub Copilot MCP HTTP endpoint.
 
     Expected: POST {endpoint}/issues with JSON payload. Uses Bearer token auth.
@@ -171,7 +178,15 @@ def main():
 
     if mcp_endpoint and mcp_token and gh_repo:
         print('Publishing via GitHub Copilot MCP...')
-        success, resp = publish_via_mcp_github_copilot(mcp_endpoint, mcp_token, gh_repo, title, issue_markdown, labels, assignees)
+        success, resp = publish_via_mcp_github_copilot(
+            mcp_endpoint,
+            mcp_token,
+            gh_repo,
+            title,
+            issue_markdown,
+            labels,
+            assignees,
+        )
         if success:
             print('Published via MCP:')
             print(json.dumps(resp, indent=2))

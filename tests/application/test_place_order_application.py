@@ -1,4 +1,3 @@
-import pytest
 
 from app.application.controllers.commande_controller import CommandesController
 from app.application.dto.commande import CreerCommandeRequest
@@ -8,8 +7,8 @@ from app.domain.use_cases.place_order import PasserCommandeUseCase
 class TestPlaceOrderApplicationController:
     def setup_method(self):
         # Use production in-memory stock repository for application tests
-        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
         from app.infrastructure.adapters.in_memory_order_repository import InMemoryOrderRepository
+        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
 
         # Provide some initial stock for the scenario
         self.fake_inventory = InMemoryStockRepository({"Mojito": 10})

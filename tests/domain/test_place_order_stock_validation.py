@@ -1,7 +1,7 @@
 import pytest
 
-from app.domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
-from app.domain.exceptions import StockInsuffisantException, ArticleInconnuException
+from app.domain.exceptions import ArticleInconnuException, StockInsuffisantException
+from app.domain.use_cases.place_order import PasserCommandeCommand, PasserCommandeUseCase
 
 
 class TestPlaceOrderStockValidation:

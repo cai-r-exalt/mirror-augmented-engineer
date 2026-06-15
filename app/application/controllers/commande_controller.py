@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
 from app.application.dto.commande import CreerCommandeRequest, CreerCommandeResponse
-from app.application.use_cases.validate_order import validate_order_request, map_request_to_domain_command
+from app.application.use_cases.validate_order import map_request_to_domain_command, validate_order_request
 
 
 class CommandesController:

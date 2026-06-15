@@ -105,7 +105,7 @@ class TestModifyOrderUseCase:
         result = self.use_case.execute(cmd)
 
         assert len(result.lignes) == 2
-        names = {l.article.name for l in result.lignes}
+        names = {ligne.article.name for ligne in result.lignes}
         assert names == {"Bière", "Eau plate"}
 
     # ── Failure: order not found ─────────────────────────────────────────────

@@ -6,10 +6,10 @@ controller instance. It's intentionally simple and uses in-memory
 adapters so tests and local runs don't require external services.
 """
 
-from app.infrastructure.adapters.sqlalchemy_order_repository import SQLAlchemyOrderRepository
-from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
-from app.domain.use_cases.place_order import PasserCommandeUseCase
 from app.application.controllers.commande_controller import CommandesController
+from app.domain.use_cases.place_order import PasserCommandeUseCase
+from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
+from app.infrastructure.adapters.sqlalchemy_order_repository import SQLAlchemyOrderRepository
 
 
 def create_application():
