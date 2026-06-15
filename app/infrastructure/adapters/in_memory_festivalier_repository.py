@@ -35,3 +35,14 @@ class InMemoryFestivalierRepository(FestivalierRepository):
             drink_tokens=balance.drink_tokens - drink_tokens,
             food_tokens=balance.food_tokens - food_tokens,
         )
+
+    def add_tokens(self, festivalier_id: str, drink_tokens: int, food_tokens: int) -> None:
+        """Add the given amounts to the festivalier's token balance."""
+        balance = self._balances.get(festivalier_id)
+        if balance is None:
+            from app.domain.exceptions import FestivalierInconnuException
+            raise FestivalierInconnuException(festivalier_id)
+        self._balances[festivalier_id] = TokenContribution(
+            drink_tokens=balance.drink_tokens + drink_tokens,
+            food_tokens=balance.food_tokens + food_tokens,
+        )

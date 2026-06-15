@@ -116,3 +116,55 @@ class PreparedStockInsufficientException(Exception):
         super().__init__(
             f"Insufficient prepared quantity for {item_name} to mark order {order_id} as ready"
         )
+
+
+class TransferNotFoundException(Exception):
+    """Raised when a token transfer cannot be found by its id."""
+
+    def __init__(self, transfer_id: str):
+        self.transfer_id = transfer_id
+        super().__init__(f"Transfer not found: {transfer_id}")
+
+
+class TransferLimitExceededException(Exception):
+    """Raised when a transfer exceeds the maximum of 3 tokens per type."""
+
+    def __init__(self, token_type: str, requested: int):
+        self.token_type = token_type
+        self.requested = requested
+        super().__init__(
+            f"Transfer of {requested} {token_type} tokens exceeds the maximum of 3 per transfer"
+        )
+
+
+class TransferInsufficientTokensException(Exception):
+    """Raised when the sender does not have enough tokens to cover the transfer."""
+
+    def __init__(self, festivalier_id: str, token_type: str):
+        self.festivalier_id = festivalier_id
+        self.token_type = token_type
+        super().__init__(
+            f"Festivalier {festivalier_id} does not have enough {token_type} tokens for this transfer"
+        )
+
+
+class TransferNotPendingException(Exception):
+    """Raised when an action requires a PENDING transfer but it is in another state."""
+
+    def __init__(self, transfer_id: str, current_status: str):
+        self.transfer_id = transfer_id
+        self.current_status = current_status
+        super().__init__(
+            f"Transfer {transfer_id} is not in PENDING state (current: {current_status})"
+        )
+
+
+class TransferUnauthorizedException(Exception):
+    """Raised when a festivalier tries to confirm a transfer they are not the recipient of."""
+
+    def __init__(self, transfer_id: str, festivalier_id: str):
+        self.transfer_id = transfer_id
+        self.festivalier_id = festivalier_id
+        super().__init__(
+            f"Festivalier {festivalier_id} is not the recipient of transfer {transfer_id}"
+        )

@@ -16,3 +16,8 @@ class FestivalierRepository(ABC):
     def deduct_tokens(self, festivalier_id: str, drink_tokens: int, food_tokens: int) -> None:
         """Deduct the given amounts from the festivalier's token balance."""
         raise NotImplementedError
+
+    @abstractmethod
+    def add_tokens(self, festivalier_id: str, drink_tokens: int, food_tokens: int) -> None:
+        """Add the given amounts to the festivalier's token balance."""
+        raise NotImplementedError

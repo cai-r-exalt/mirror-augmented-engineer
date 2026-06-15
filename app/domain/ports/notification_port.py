@@ -45,3 +45,26 @@ class NotificationPort(ABC):
     ) -> None:
         """Notify the festivalier that their order is ready for pickup."""
         raise NotImplementedError
+
+    @abstractmethod
+    def notify_transfer_created(
+        self,
+        recipient_id: str,
+        transfer_id: str,
+        sender_id: str,
+        drink_tokens: int,
+        food_tokens: int,
+    ) -> None:
+        """Notify the recipient that a transfer has been created for them."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def notify_transfer_finalized(
+        self,
+        sender_id: str,
+        recipient_id: str,
+        transfer_id: str,
+        confirmed: bool,
+    ) -> None:
+        """Notify both sender and recipient about the transfer finalization."""
+        raise NotImplementedError
