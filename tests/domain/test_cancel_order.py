@@ -1,5 +1,5 @@
+from app.domain.entities.commande import Article, Commande, LigneCommande
 from app.domain.ports.order_repository import OrderRepository
-from app.domain.entities.commande import Commande, LigneCommande, Article
 
 
 class FakeOrderRepository(OrderRepository):
@@ -29,7 +29,14 @@ class FakeOrderRepository(OrderRepository):
 def test_given_pending_order_when_cancel_then_status_becomes_annule():
     # Given: a saved order with status EN_ATTENTE
     repo = FakeOrderRepository()
-    order = Commande(id="o-123", festivalier_id="f-1", lignes=[LigneCommande(article=Article(name="Mojito"), quantite=1)], status="EN_ATTENTE")
+    order = Commande(
+        id="o-123",
+        festivalier_id="f-1",
+        lignes=[
+            LigneCommande(article=Article(name="Mojito"), quantite=1),
+        ],
+        status="EN_ATTENTE",
+    )
     repo.save(order)
 
     # When: cancelling the order via the domain use case

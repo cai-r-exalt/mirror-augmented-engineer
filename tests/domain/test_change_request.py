@@ -11,8 +11,8 @@ import pytest
 from app.domain.entities.commande import Article, Commande, LigneCommande
 from app.domain.exceptions import (
     ChangeRequestNotFoundException,
-    OrderNotFoundException,
     OrderNotEligibleForChangeRequestException,
+    OrderNotFoundException,
 )
 from app.domain.use_cases.create_change_request import (
     CreateChangeRequestCommand,

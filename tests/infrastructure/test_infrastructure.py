@@ -1,7 +1,7 @@
 # Infrastructure tests — adapters, persistence, and integrations.
 # These tests describe the expected persistence behaviour for orders.
 
-from app.domain.entities.commande import Article, LigneCommande, Commande
+from app.domain.entities.commande import Article, Commande, LigneCommande
 from app.infrastructure.adapters.sqlalchemy_order_repository import SQLAlchemyOrderRepository
 
 

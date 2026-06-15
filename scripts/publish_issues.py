@@ -14,14 +14,14 @@ Behavior:
 This is intentionally dependency-free (urllib).
 """
 
-from pathlib import Path
+import json
 import os
 import sys
-import json
 import time
 import urllib.parse
+from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
-from urllib.error import HTTPError, URLError
 
 ROOT = Path(__file__).resolve().parents[1]
 FEATURES_DIR = ROOT / 'docs' / 'features'
@@ -196,7 +196,13 @@ def scan_and_publish():
         if title in existing:
             print(f'Skipping {md} (issue already exists: {existing[title]["url"]})')
             # write small published.json so future runs skip
-            published_file.write_text(json.dumps({'number': existing[title]['number'], 'url': existing[title]['url']}, indent=2), encoding='utf-8')
+            published_file.write_text(
+                json.dumps(
+                    {'number': existing[title]['number'], 'url': existing[title]['url']},
+                    indent=2,
+                ),
+                encoding='utf-8',
+            )
             continue
 
         print(f'Creating issue for {md} -> "{title}"')

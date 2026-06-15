@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from app.domain.entities.change_request import ChangeRequest
 from app.domain.entities.commande import Article, Commande, LigneCommande

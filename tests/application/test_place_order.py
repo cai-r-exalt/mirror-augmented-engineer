@@ -1,4 +1,3 @@
-import pytest
 
 """Application-layer test: Passer une commande (simple, article en stock).
 
@@ -12,14 +11,14 @@ Scenario:
 This test is expected to fail until the application use case is implemented.
 """
 
-from app.application.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
+from app.application.use_cases.place_order import PasserCommandeCommand, PasserCommandeUseCase
 
 
 class TestPlaceOrder:
     def setup_method(self):
         # Use production in-memory stock repository for application tests
-        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
         from app.infrastructure.adapters.in_memory_order_repository import InMemoryOrderRepository
+        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
 
         self.fake_inventory = InMemoryStockRepository({"Mojito": 10})
         self.fake_order_repo = InMemoryOrderRepository()

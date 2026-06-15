@@ -1,7 +1,5 @@
-import pytest
 
-from app.domain.use_cases.place_order import PasserCommandeUseCase, PasserCommandeCommand
-
+from app.domain.use_cases.place_order import PasserCommandeCommand, PasserCommandeUseCase
 
 """Scenario: Passer une commande simple avec un article disponible
 
@@ -14,8 +12,8 @@ And le stock est décrémenté de 2
 
 class TestPasserCommandeSimpleArticleDisponible:
     def setup_method(self):
-        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
         from app.infrastructure.adapters.in_memory_order_repository import InMemoryOrderRepository
+        from app.infrastructure.adapters.in_memory_stock_repository import InMemoryStockRepository
 
         # Use production in-memory repositories
         self.inventory = InMemoryStockRepository({"Bière Pale Ale": 10})

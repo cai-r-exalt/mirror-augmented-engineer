@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
-from app.domain.use_cases.place_order import PasserCommandeUseCase as DomainPasserCommandeUseCase, PasserCommandeCommand as DomainPasserCommandeCommand
+from app.domain.use_cases.place_order import PasserCommandeCommand as DomainPasserCommandeCommand
+from app.domain.use_cases.place_order import PasserCommandeUseCase as DomainPasserCommandeUseCase
 
 
 @dataclass

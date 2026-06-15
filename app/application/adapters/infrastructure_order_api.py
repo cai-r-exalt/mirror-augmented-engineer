@@ -12,7 +12,12 @@ class InfrastructureOrderAPI:
     to the controller and using the DTOs.
     """
 
-    def __init__(self, base_url: str = "http://localhost:8000", controller: Optional[CommandesController] = None, use_case: Optional[object] = None) -> None:
+    def __init__(
+        self,
+        base_url: str = "http://localhost:8000",
+        controller: Optional[CommandesController] = None,
+        use_case: Optional[object] = None,
+    ) -> None:
         self.base_url = base_url
         # Priority: explicit controller -> controller built with provided use_case -> default controller
         if controller is not None:
