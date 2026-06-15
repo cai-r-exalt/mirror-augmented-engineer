@@ -35,3 +35,6 @@ class InMemoryStockRepository(StockRepository):
         if current < quantity:
             raise ValueError(f"Insufficient prepared stock for {item_name}")
         self.prepared_stock[item_name] = current - quantity
+
+    def get_prepared_quantity(self, item_name: str) -> int:
+        return self.prepared_stock.get(item_name, 0)
