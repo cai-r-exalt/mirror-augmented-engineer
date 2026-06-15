@@ -199,3 +199,22 @@ class SQLAlchemyOrderRepository(OrderRepository):
             for c in self._store.values()
             if c.festivalier_id == festivalier_id and c.status == status
         ]
+
+    def find_by_festivalier_acknowledged_since(
+        self, festivalier_id: str, since
+    ) -> List[Commande]:
+        from datetime import datetime, timezone
+
+        results = []
+        for c in self._store.values():
+            if c.festivalier_id != festivalier_id:
+                continue
+            if not c.acknowledged_at:
+                continue
+            ack_dt = datetime.fromisoformat(c.acknowledged_at)
+            if ack_dt.tzinfo is None:
+                ack_dt = ack_dt.replace(tzinfo=timezone.utc)
+            since_aware = since if since.tzinfo is not None else since.replace(tzinfo=timezone.utc)
+            if ack_dt >= since_aware:
+                results.append(c)
+        return results

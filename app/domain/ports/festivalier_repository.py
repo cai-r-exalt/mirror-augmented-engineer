@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import List, Optional
 
 from app.domain.value_objects.token_contribution import TokenContribution
 
@@ -10,6 +10,11 @@ class FestivalierRepository(ABC):
     @abstractmethod
     def get_balance(self, festivalier_id: str) -> Optional[TokenContribution]:
         """Return the token balance for the given festivalier, or None if not found."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def list_all_ids(self) -> List[str]:
+        """Return the list of all registered festivalier IDs."""
         raise NotImplementedError
 
     @abstractmethod
