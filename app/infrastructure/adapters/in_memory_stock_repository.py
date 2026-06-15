@@ -38,3 +38,9 @@ class InMemoryStockRepository(StockRepository):
 
     def get_prepared_quantity(self, item_name: str) -> int:
         return self.prepared_stock.get(item_name, 0)
+
+    def get_quantity(self, item_name: str) -> int:
+        return self.stock.get(item_name, 0)
+
+    def set_quantity(self, item_name: str, quantity: int) -> None:
+        self.stock[item_name] = quantity
