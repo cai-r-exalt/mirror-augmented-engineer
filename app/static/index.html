@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Buvette UI</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 2rem; }
+    .card{ border: 1px solid #ddd; padding: 1rem; margin-bottom:1rem }
+  </style>
+</head>
+<body>
+  <h1>Buvette — Simple UI</h1>
+  <div class="card">
+    <h2>Stock</h2>
+    <button id="refresh-stock">Refresh</button>
+    <ul id="stock-list"></ul>
+  </div>
+
+  <div class="card">
+    <h2>Create Order</h2>
+    <div>
+      Festivalier ID: <input id="festivalier" value="alice" />
+    </div>
+    <div>
+      Items (format: comma-separated name:qty, e.g. Mojito:2, Eau plate:1):<br/>
+      <input id="items" value="Mojito:2, Eau plate:1" style="width:80%" />
+    </div>
+    <button id="create-order">Create</button>
+    <pre id="create-result"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Orders</h2>
+    <button id="refresh-orders">Refresh</button>
+    <div id="orders"></div>
+  </div>
+
+  <div class="card">
+    <h2>Bartender Panel</h2>
+    <button id="refresh-pending">Refresh Pending</button>
+    <div id="pending-orders"></div>
+  </div>
+
+<script>
+async function fetchStock(){
+  const res = await fetch('/api/stock');
+  const data = await res.json();
+  const ul = document.getElementById('stock-list');
+  ul.innerHTML = '';
+  for(const k of Object.keys(data)){
+    const li = document.createElement('li');
+    li.textContent = `${k}: ${data[k]}`;
+    ul.appendChild(li);
+  }
+}
+
+async function fetchOrders(){
+  const res = await fetch('/api/orders');
+  const data = await res.json();
+  const container = document.getElementById('orders');
+  container.innerHTML = '';
+  for(const o of data){
+    const div = document.createElement('div');
+    div.innerHTML = `<strong>${o.id}</strong> ${o.festivalier_id} (${o.status})<br/>` + o.lines.map(l=>`- ${l.name}: ${l.qty}`).join('<br/>');
+    const btnView = document.createElement('button'); btnView.textContent = 'View';
+    btnView.addEventListener('click', async ()=>{ const full = await fetchOrderById(o.id); alert(JSON.stringify(full, null, 2)); });
+    const btnModify = document.createElement('button'); btnModify.textContent = 'Modify';
+    btnModify.addEventListener('click', async ()=>{ const newItems = prompt('Enter new items (comma-separated name:qty)', o.lines.map(l=>`${l.name}:${l.qty}`).join(', ')); if(newItems!=null){ const parts = newItems.split(',').map(s=>s.trim()).filter(Boolean); const items = parts.map(it=>{ const p=it.split(':'); const qty=Number(p.pop()); const name=p.join(':').trim(); return {name, quantity: qty} }); const res = await fetch(`/api/order/${encodeURIComponent(o.id)}/modify`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items})}); if(res.ok){ alert('Modified'); fetchOrders(); fetchPendingOrders(); } else { alert('Failed'); } }});
+    const btnCancel = document.createElement('button'); btnCancel.textContent='Cancel';
+    btnCancel.addEventListener('click', async ()=>{ if(!confirm('Cancel order '+o.id+'?')) return; const res = await fetch(`/api/order/${encodeURIComponent(o.id)}/status`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({status: 'ANNULE'})}); if(res.ok){ fetchOrders(); fetchPendingOrders(); } else alert('Failed'); });
+    div.appendChild(document.createElement('br'));
+    div.appendChild(btnView); div.appendChild(btnModify); div.appendChild(btnCancel);
+    container.appendChild(div);
+  }
+}
+
+document.getElementById('refresh-stock').addEventListener('click', fetchStock);
+document.getElementById('refresh-orders').addEventListener('click', fetchOrders);
+document.getElementById('refresh-pending').addEventListener('click', fetchPendingOrders);
+
+document.getElementById('create-order').addEventListener('click', async ()=>{
+  const festivalier = document.getElementById('festivalier').value;
+  const raw = document.getElementById('items').value.trim();
+  const parts = raw.split(',').map(s=>s.trim()).filter(Boolean);
+  const items = parts.map(it=>{ const p = it.split(':'); const qty = Number(p.pop()); const name = p.join(':').trim(); return {name, quantity: qty} });
+  const res = await fetch('/api/order', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({festivalier_id: festivalier, items})});
+  const j = await res.json();
+  document.getElementById('create-result').textContent = JSON.stringify(j, null, 2);
+  fetchOrders();
+  fetchStock();
+});
+
+// small helper: fetch a single order
+async function fetchOrderById(id){
+  const res = await fetch(`/api/order/${encodeURIComponent(id)}`);
+  if(!res.ok) return null;
+  return await res.json();
+}
+
+async function fetchPendingOrders(){
+  const res = await fetch('/api/orders?status=EN_ATTENTE');
+  const data = await res.json();
+  const container = document.getElementById('pending-orders');
+  container.innerHTML = '';
+  for(const o of data){
+    const div = document.createElement('div');
+    div.innerHTML = `<strong>${o.id}</strong> ${o.festivalier_id} (${o.status})<br/>` + o.lines.map(l=>`- ${l.name}: ${l.qty}`).join('<br/>');
+    const startBtn = document.createElement('button'); startBtn.textContent='Start'; startBtn.addEventListener('click', async ()=>{ const res=await fetch(`/api/order/${encodeURIComponent(o.id)}/status`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({status:'EN_PREPARATION'})}); if(res.ok){ fetchPendingOrders(); fetchOrders(); } });
+    const readyBtn = document.createElement('button'); readyBtn.textContent='Ready'; readyBtn.addEventListener('click', async ()=>{ const res=await fetch(`/api/order/${encodeURIComponent(o.id)}/status`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({status:'PRET'})}); if(res.ok){ fetchPendingOrders(); fetchOrders(); } });
+    div.appendChild(document.createElement('br'));
+    div.appendChild(startBtn); div.appendChild(readyBtn);
+    container.appendChild(div);
+  }
+}
+
+// initial load
+fetchStock();
+fetchOrders();
+</script>
+</body>
+</html>

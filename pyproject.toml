@@ -19,6 +19,9 @@ testpaths = [
     "tests/infrastructure",
 ]
 pythonpath = ["."]
+markers = [
+    "timeout(duration): mark test to fail if it runs longer than duration seconds",
+]
 
 # ─── Linting / formatting (Ruff) ─────────────────────────────────────────────
 [tool.ruff]
